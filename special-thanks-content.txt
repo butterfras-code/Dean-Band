@@ -1,0 +1,96 @@
+SPECIAL THANKS CONTENT TO ADD TO WINTER CONCERT PROGRAM
+========================================================
+
+This document contains the new Special Thanks content that needs to be incorporated 
+into the winter-concert-program.html file.
+
+ENGLISH VERSION (for TRANSLATIONS.en):
+--------------------------------------
+
+thanksHeader: "Special Thanks"
+
+thanksIntro: "We would like to thank the following individuals for their unwavering support:"
+
+thanksStaff: [
+    "Michael George, Principal",
+    "Kristen Thorin, Director of Instruction",
+    "Laura Mosqueda, Secretary",
+    "John Morrison, Director of Fine Arts",
+    "Joe Glass, Coordinator of Secondary Music",
+    "Dr. Ashley Augustave, Paul Guerrero, Will Watkins, Assistant Principals",
+    "Lakeysa Hobson, T'Keyah Gilliam, Steven Hatcher, Counselors"
+]
+
+thanksClosing: "And a very special thanks to the Dean Band students for their work throughout the year, the Dean Band parents for supporting the students, and the Jersey Village Band Staff for their weekly support."
+
+fundraiserHeader: "Fundraiser Recognition"
+
+fundraiserIntro: "In our recent fundraiser, 68 students and 188 donations raised over $8,000 to make band better for everyone. We would like to specifically acknowledge the families of the following students who raised over $250:"
+
+topDonors: [
+    "Omar Balcazar",
+    "Xavier Bedigan",
+    "Vincent De Leon",
+    "Kain Gee",
+    "Lauryn & Morgan Graham",
+    "Roxanne A Gutierrez",
+    "Ricardo Henriquez",
+    "Mateo Lizama",
+    "Guillermo Morales",
+    "Tommy Nguyen",
+    "Samuel Picaz"
+]
+
+
+SPANISH VERSION (for TRANSLATIONS.es):
+--------------------------------------
+
+thanksHeader: "Agradecimientos Especiales"
+
+thanksIntro: "Nos gustaría agradecer a las siguientes personas por su apoyo inquebrantable:"
+
+thanksStaff: [
+    "Michael George, Director",
+    "Kristen Thorin, Directora de Instrucción",
+    "Laura Mosqueda, Secretaria",
+    "John Morrison, Director de Bellas Artes",
+    "Joe Glass, Coordinador de Música Secundaria",
+    "Dr. Ashley Augustave, Paul Guerrero, Will Watkins, Subdirectores",
+    "Lakeysa Hobson, T'Keyah Gilliam, Steven Hatcher, Consejeros"
+]
+
+thanksClosing: "Y un agradecimiento muy especial a los estudiantes de Dean Band por su trabajo durante todo el año, a los padres de Dean Band por apoyar a los estudiantes, y al personal de Jersey Village Band por su apoyo semanal."
+
+fundraiserHeader: "Reconocimiento de Recaudación de Fondos"
+
+fundraiserIntro: "En nuestra reciente recaudación de fondos, 68 estudiantes y 188 donaciones recaudaron más de $8,000 para mejorar la banda para todos. Nos gustaría reconocer específicamente a las familias de los siguientes estudiantes que recaudaron más de $250:"
+
+topDonors: [
+    "Omar Balcazar",
+    "Xavier Bedigan",
+    "Vincent De Leon",
+    "Kain Gee",
+    "Lauryn & Morgan Graham",
+    "Roxanne A Gutierrez",
+    "Ricardo Henriquez",
+    "Mateo Lizama",
+    "Guillermo Morales",
+    "Tommy Nguyen",
+    "Samuel Picaz"
+]
+
+
+RENDERING LOGIC UPDATES NEEDED:
+--------------------------------
+
+The renderInfoPage function needs to be updated to display this new content.
+Instead of just showing thanksBody, it should:
+
+1. Display thanksIntro
+2. Loop through thanksStaff array and display each item
+3. Display thanksClosing
+4. Display fundraiserHeader as a section header
+5. Display fundraiserIntro  
+6. Loop through topDonors array and display each name
+
+The layout should be left-aligned for better readability of the lists.
