@@ -177,7 +177,7 @@
 
             // Group 3: Concert Winds
             { group: "Concert Winds", first: "Grayson", last: "Carter", instrument: "Trombone" },
-            { group: "Concert Winds", first: "Gabriell", last: "Diaz", instrument: "Clarinet" },
+            { group: "Concert Winds", first: "Gabriell", last: "Diaz", instrument: "Bass Clarinet" },
             { group: "Concert Winds", first: "Anjel", last: "Reyes", instrument: "Trombone" },
             { group: "Concert Winds", first: "Issabella", last: "Salinas", instrument: "Clarinet" },
             { group: "Concert Winds", first: "Rommel", last: "Sosa Montes", instrument: "Clarinet" },
@@ -230,10 +230,29 @@
                     "Samuel Picaz"
                 ],
                 upcomingHeader: "Upcoming Events",
-                selections: [
-                    { title: "Winter Fanfare", composer: "Arr. Smith" },
-                    { title: "Sleigh Ride Adventures", composer: "Arr. Jones" },
-                    { title: "Holiday Finale", composer: "Arr. Johnson" }
+                conductorSymphonicWinds: "Mr. Paul Hogue",
+                conductorSymphonicBand: "Mr. Justin Butterfras",
+                conductorConcertWinds: "Mr. Justin Butterfras",
+                selectionsSymphonicWinds: [
+                    "Carol of The Bells & Greensleeves",
+                    "The Night Before Christmas"
+                ],
+                selectionsSymphonicBand: [
+                    "Epaulettes of Gold",
+                    "Dragon Slide",
+                    "Bad Elf"
+                ],
+                selectionsConcertWinds: [
+                    "Remember Me",
+                    "Deck the Hall"
+                ],
+                upcomingEvents: [
+                    { date: "Dec. 17", title: "Beginning Band Demonstration Concert", description: "Beginning Band students perform during band class" },
+                    { date: "Jan. 13", title: "Fun & Futures Night", description: "Symphonic Winds performs" },
+                    { date: "Jan. 31", title: "Solo & Ensemble Contest", description: "Students perform alone and in small ensembles for the chance to earn a medal. Students must pass all classes to participate." },
+                    { date: "Feb. 11", title: "Jumping World", description: "" },
+                    { date: "Feb. 28", title: "Symphonic Band Pre-UIL Festival", description: "" },
+                    { date: "Mar. 4", title: "Showcase Concert", description: "" }
                 ]
             },
             es: {
@@ -279,10 +298,29 @@
                     "Samuel Picaz"
                 ],
                 upcomingHeader: "Próximos Eventos",
-                selections: [
-                    { title: "Fanfarria de Invierno", composer: "Arr. Smith" },
-                    { title: "Aventuras en Trineo", composer: "Arr. Jones" },
-                    { title: "Final Festivo", composer: "Arr. Johnson" }
+                conductorSymphonicWinds: "Sr. Paul Hogue",
+                conductorSymphonicBand: "Sr. Justin Butterfras",
+                conductorConcertWinds: "Sr. Justin Butterfras",
+                selectionsSymphonicWinds: [
+                    "Carol of The Bells & Greensleeves",
+                    "The Night Before Christmas"
+                ],
+                selectionsSymphonicBand: [
+                    "Epaulettes of Gold",
+                    "Dragon Slide",
+                    "Bad Elf"
+                ],
+                selectionsConcertWinds: [
+                    "Remember Me",
+                    "Deck the Hall"
+                ],
+                upcomingEvents: [
+                    { date: "17 de dic.", title: "Concierto de Demostración de Banda Principiante", description: "Los estudiantes de Banda Principiante tocan durante la clase de banda" },
+                    { date: "13 de ene.", title: "Noche de Diversión y Futuros", description: "Vientos Sinfónicos toca" },
+                    { date: "31 de ene.", title: "Concurso de Solo y Ensamble", description: "Los estudiantes tocan solos y en pequeños ensambles para tener la oportunidad de ganar una medalla. Los estudiantes deben aprobar todas las clases para participar." },
+                    { date: "11 de feb.", title: "Jumping World", description: "" },
+                    { date: "28 de feb.", title: "Festival Pre-UIL de Banda Sinfónica", description: "" },
+                    { date: "4 de mar.", title: "Concierto Showcase", description: "" }
                 ]
             }
         };
@@ -402,6 +440,21 @@
                     return acc;
                 }, {});
 
+                // Get the correct conductor and selections based on the band
+                let conductorName = "";
+                let selections = [];
+
+                if (titleKey === 'symphonicWinds') {
+                    conductorName = t.conductorSymphonicWinds;
+                    selections = t.selectionsSymphonicWinds;
+                } else if (titleKey === 'symphonicBand') {
+                    conductorName = t.conductorSymphonicBand;
+                    selections = t.selectionsSymphonicBand;
+                } else if (titleKey === 'concertWinds') {
+                    conductorName = t.conductorConcertWinds;
+                    selections = t.selectionsConcertWinds;
+                }
+
                 return (
                     <div className="animate-in slide-in-from-right duration-300">
                         <button onClick={() => setView('home')} className="flex items-center text-yellow-400 hover:text-yellow-300 mb-8 transition-colors font-semibold text-lg md:text-base py-3 px-1" style={{ minHeight: '48px' }}>
@@ -409,14 +462,13 @@
                             {t.back}
                         </button>
                         <h2 className="text-4xl md:text-3xl font-serif font-bold text-white mb-3 text-center">{t[titleKey]}</h2>
-                        <p className="text-center text-slate-300 mb-10 text-lg md:text-base">{t.conductor}: <span className="text-white italic">[Name Placeholder]</span></p>
+                        <p className="text-center text-slate-300 mb-10 text-lg md:text-base">{t.conductor}: <span className="text-white italic">{conductorName}</span></p>
                         <div className="bg-slate-800/60 rounded-2xl p-6 md:p-8 mb-10 border-2 border-slate-700">
                             <h3 className="text-yellow-400 font-bold uppercase tracking-wider text-lg md:text-sm mb-6 text-center border-b-2 border-slate-700 pb-3">{t.program}</h3>
                             <ul className="space-y-5 md:space-y-4">
-                                {t.selections.map((song, idx) => (
-                                    <li key={idx} className="flex flex-col md:flex-row md:justify-between md:items-end text-center md:text-left">
-                                        <span className="text-white font-semibold text-xl md:text-lg mb-1 md:mb-0">{song.title}</span>
-                                        <span className="text-slate-300 text-base md:text-sm">{song.composer}</span>
+                                {selections.map((song, idx) => (
+                                    <li key={idx} className="text-center">
+                                        <span className="text-white font-semibold text-xl md:text-lg">{song}</span>
                                     </li>
                                 ))}
                             </ul>
@@ -480,15 +532,18 @@
                             <>
                                 <Calendar className="w-16 h-16 md:w-12 md:h-12 text-blue-500 mx-auto mb-6" />
                                 <h2 className="text-3xl md:text-2xl font-serif font-bold text-white mb-6 text-center">{t.upcomingHeader}</h2>
-                                <ul className="space-y-6 md:space-y-4 text-left inline-block">
-                                    <li className="flex flex-col">
-                                        <span className="text-white font-bold text-xl md:text-lg">Spring Concert</span>
-                                        <span className="text-slate-300 text-lg md:text-base mt-1">May 2026</span>
-                                    </li>
-                                    <li className="flex flex-col">
-                                        <span className="text-white font-bold text-xl md:text-lg">UIL Concert & Sight-reading</span>
-                                        <span className="text-slate-300 text-lg md:text-base mt-1">April 2026</span>
-                                    </li>
+                                <ul className="space-y-6 md:space-y-4 text-left max-w-2xl mx-auto w-full">
+                                    {t.upcomingEvents.map((event, idx) => (
+                                        <li key={idx} className="flex flex-col border-b border-slate-700 pb-4 last:border-0">
+                                            <div className="flex items-baseline gap-3 mb-1">
+                                                <span className="text-yellow-400 font-bold text-base md:text-sm whitespace-nowrap">{event.date}</span>
+                                                <span className="text-white font-bold text-xl md:text-lg">{event.title}</span>
+                                            </div>
+                                            {event.description && (
+                                                <span className="text-slate-300 text-base md:text-sm mt-1 ml-0">{event.description}</span>
+                                            )}
+                                        </li>
+                                    ))}
                                 </ul>
                             </>
                         )}
