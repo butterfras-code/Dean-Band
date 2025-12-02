@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Winter Concert Program</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,8 +14,25 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <style>
+        /* Mobile-first optimizations */
+        * {
+            -webkit-tap-highlight-color: rgba(234, 179, 8, 0.3);
+        }
+
+        html {
+            -webkit-text-size-adjust: 100%;
+            touch-action: manipulation;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
         ::-webkit-scrollbar {
-            width: 8px;
+            width: 12px;
         }
 
         ::-webkit-scrollbar-track {
@@ -23,12 +40,12 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 4px;
+            background: #475569;
+            border-radius: 6px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #475569;
+            background: #64748b;
         }
     </style>
 </head>
@@ -249,17 +266,18 @@
             </div>
         );
 
+        // Mobile-first Card component with larger touch targets
         const Card = ({ children, onClick, className = "" }) => (
-            <div onClick={onClick} className={`bg-slate-800/80 backdrop-blur-sm border border-slate-700 p-6 rounded-xl shadow-lg mb-4 text-center transform transition-all active:scale-95 ${onClick ? 'cursor-pointer hover:bg-slate-700/80 hover:border-yellow-500/50' : ''} ${className}`}>
+            <div onClick={onClick} className={`bg-slate-800/90 backdrop-blur-sm border-2 border-slate-700 p-6 md:p-8 rounded-2xl shadow-xl mb-6 text-center transform transition-all active:scale-95 ${onClick ? 'cursor-pointer hover:bg-slate-700/90 hover:border-yellow-500/60 hover:shadow-yellow-500/20' : ''} ${className}`} style={{ minHeight: onClick ? '80px' : 'auto' }}>
                 {children}
             </div>
         );
 
         const SectionHeader = ({ title }) => (
-            <div className="flex items-center justify-center space-x-4 my-6">
-                <div className="h-px bg-gradient-to-r from-transparent via-yellow-500 to-transparent w-16"></div>
-                <h2 className="text-xl font-serif text-yellow-100 tracking-wide uppercase">{title}</h2>
-                <div className="h-px bg-gradient-to-r from-transparent via-yellow-500 to-transparent w-16"></div>
+            <div className="flex items-center justify-center space-x-4 my-8">
+                <div className="h-px bg-gradient-to-r from-transparent via-yellow-500 to-transparent w-20"></div>
+                <h2 className="text-2xl md:text-xl font-serif text-yellow-100 tracking-wide uppercase">{title}</h2>
+                <div className="h-px bg-gradient-to-r from-transparent via-yellow-500 to-transparent w-20"></div>
             </div>
         );
 
@@ -277,49 +295,49 @@
 
             const renderHome = () => (
                 <div className="animate-in fade-in zoom-in duration-500">
-                    <div className="text-center mb-8 space-y-2">
-                        <div className="w-16 h-16 bg-yellow-500 rounded-full mx-auto mb-4 flex items-center justify-center shadow-[0_0_20px_rgba(234,179,8,0.3)]">
-                            <Music className="text-slate-900 w-8 h-8" />
+                    <div className="text-center mb-10 space-y-3">
+                        <div className="w-20 h-20 md:w-16 md:h-16 bg-yellow-500 rounded-full mx-auto mb-6 flex items-center justify-center shadow-[0_0_30px_rgba(234,179,8,0.4)]">
+                            <Music className="text-slate-900 w-10 h-10 md:w-8 md:h-8" />
                         </div>
-                        <h1 className="text-3xl md:text-4xl font-serif font-bold text-white tracking-tight">{t.title}</h1>
-                        <p className="text-slate-300 font-light text-lg">{t.school}</p>
-                        <div className="flex flex-col items-center justify-center space-y-2 mt-4 text-yellow-500 text-sm font-medium">
-                            <div className="flex items-center space-x-2">
-                                <Calendar size={16} />
-                                <span>{t.date}</span>
+                        <h1 className="text-4xl md:text-3xl font-serif font-bold text-white tracking-tight leading-tight px-4">{t.title}</h1>
+                        <p className="text-slate-200 font-light text-xl md:text-lg">{t.school}</p>
+                        <div className="flex flex-col items-center justify-center space-y-3 mt-6 text-yellow-400 text-base md:text-sm font-medium">
+                            <div className="flex items-center space-x-3">
+                                <Calendar size={20} />
+                                <span className="text-lg md:text-base">{t.date}</span>
                             </div>
-                            <div className="flex items-center space-x-2">
-                                <MapPin size={16} />
-                                <span>{t.location}</span>
+                            <div className="flex items-center space-x-3">
+                                <MapPin size={20} />
+                                <span className="text-lg md:text-base">{t.location}</span>
                             </div>
                         </div>
                     </div>
 
                     <SectionHeader title={t.perfGroups} />
 
-                    <div className="space-y-4 max-w-md mx-auto">
+                    <div className="space-y-5 max-w-lg mx-auto">
                         <Card onClick={() => setView('symphonicBand')}>
-                            <h3 className="text-xl font-bold text-white">{t.symphonicBand}</h3>
-                            <p className="text-slate-400 text-sm mt-1">Dean Middle School</p>
+                            <h3 className="text-2xl md:text-xl font-bold text-white mb-2">{t.symphonicBand}</h3>
+                            <p className="text-slate-300 text-base md:text-sm">Dean Middle School</p>
                         </Card>
                         <Card onClick={() => setView('concertWinds')}>
-                            <h3 className="text-xl font-bold text-white">{t.concertWinds}</h3>
-                            <p className="text-slate-400 text-sm mt-1">Dean Middle School</p>
+                            <h3 className="text-2xl md:text-xl font-bold text-white mb-2">{t.concertWinds}</h3>
+                            <p className="text-slate-300 text-base md:text-sm">Dean Middle School</p>
                         </Card>
                         <Card onClick={() => setView('symphonicWinds')}>
-                            <h3 className="text-xl font-bold text-white">{t.symphonicWinds}</h3>
-                            <p className="text-slate-400 text-sm mt-1">Dean Middle School</p>
+                            <h3 className="text-2xl md:text-xl font-bold text-white mb-2">{t.symphonicWinds}</h3>
+                            <p className="text-slate-300 text-base md:text-sm">Dean Middle School</p>
                         </Card>
                     </div>
 
-                    <div className="mt-12 grid grid-cols-2 gap-4 max-w-md mx-auto">
-                        <Card onClick={() => setView('thanks')} className="h-full flex flex-col items-center justify-center">
-                            <Heart className="w-6 h-6 text-red-400 mb-2" />
-                            <span className="text-white font-medium">{t.specialThanks}</span>
+                    <div className="mt-12 grid grid-cols-2 gap-5 max-w-lg mx-auto">
+                        <Card onClick={() => setView('thanks')} className="h-full flex flex-col items-center justify-center py-8">
+                            <Heart className="w-8 h-8 md:w-6 md:h-6 text-red-400 mb-3" />
+                            <span className="text-white font-semibold text-lg md:text-base">{t.specialThanks}</span>
                         </Card>
-                        <Card onClick={() => setView('events')} className="h-full flex flex-col items-center justify-center">
-                            <Info className="w-6 h-6 text-blue-400 mb-2" />
-                            <span className="text-white font-medium">{t.nextEvents}</span>
+                        <Card onClick={() => setView('events')} className="h-full flex flex-col items-center justify-center py-8">
+                            <Info className="w-8 h-8 md:w-6 md:h-6 text-blue-400 mb-3" />
+                            <span className="text-white font-semibold text-lg md:text-base">{t.nextEvents}</span>
                         </Card>
                     </div>
                 </div>
@@ -336,33 +354,33 @@
 
                 return (
                     <div className="animate-in slide-in-from-right duration-300">
-                        <button onClick={() => setView('home')} className="flex items-center text-yellow-400 hover:text-yellow-300 mb-6 transition-colors font-medium">
-                            <ChevronLeft size={20} className="mr-1" />
+                        <button onClick={() => setView('home')} className="flex items-center text-yellow-400 hover:text-yellow-300 mb-8 transition-colors font-semibold text-lg md:text-base py-3 px-1" style={{ minHeight: '48px' }}>
+                            <ChevronLeft size={24} className="mr-2" />
                             {t.back}
                         </button>
-                        <h2 className="text-3xl font-serif font-bold text-white mb-2 text-center">{t[titleKey]}</h2>
-                        <p className="text-center text-slate-400 mb-8">{t.conductor}: <span className="text-white italic">[Name Placeholder]</span></p>
-                        <div className="bg-slate-800/50 rounded-xl p-6 mb-8 border border-slate-700">
-                            <h3 className="text-yellow-500 font-bold uppercase tracking-wider text-sm mb-4 text-center border-b border-slate-700 pb-2">{t.program}</h3>
-                            <ul className="space-y-4">
+                        <h2 className="text-4xl md:text-3xl font-serif font-bold text-white mb-3 text-center">{t[titleKey]}</h2>
+                        <p className="text-center text-slate-300 mb-10 text-lg md:text-base">{t.conductor}: <span className="text-white italic">[Name Placeholder]</span></p>
+                        <div className="bg-slate-800/60 rounded-2xl p-6 md:p-8 mb-10 border-2 border-slate-700">
+                            <h3 className="text-yellow-400 font-bold uppercase tracking-wider text-lg md:text-sm mb-6 text-center border-b-2 border-slate-700 pb-3">{t.program}</h3>
+                            <ul className="space-y-5 md:space-y-4">
                                 {t.selections.map((song, idx) => (
                                     <li key={idx} className="flex flex-col md:flex-row md:justify-between md:items-end text-center md:text-left">
-                                        <span className="text-white font-medium text-lg">{song.title}</span>
-                                        <span className="text-slate-400 text-sm">{song.composer}</span>
+                                        <span className="text-white font-semibold text-xl md:text-lg mb-1 md:mb-0">{song.title}</span>
+                                        <span className="text-slate-300 text-base md:text-sm">{song.composer}</span>
                                     </li>
                                 ))}
                             </ul>
                         </div>
                         <SectionHeader title={t.musicians} />
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-20">
+                        <div className="grid grid-cols-1 gap-8 md:gap-6 pb-24">
                             {INSTRUMENT_SCORE_ORDER.map(inst => {
                                 if (!byInstrument[inst]) return null;
                                 return (
-                                    <div key={inst} className="mb-4 text-center md:text-left">
-                                        <h4 className="text-yellow-500 font-bold mb-2">{inst}</h4>
-                                        <ul className="space-y-1">
+                                    <div key={inst} className="mb-4 bg-slate-800/40 rounded-xl p-6 md:p-5 border border-slate-700">
+                                        <h4 className="text-yellow-400 font-bold mb-4 text-xl md:text-lg text-center md:text-left">{inst}</h4>
+                                        <ul className="space-y-2.5 md:space-y-1.5">
                                             {byInstrument[inst].map((s, i) => (
-                                                <li key={i} className="text-slate-200">{s.first} {s.last}</li>
+                                                <li key={i} className="text-slate-100 text-lg md:text-base text-center md:text-left leading-relaxed">{s.first} {s.last}</li>
                                             ))}
                                         </ul>
                                     </div>
@@ -375,34 +393,34 @@
 
             const renderInfoPage = (type) => (
                 <div className="animate-in slide-in-from-right duration-300 h-full">
-                    <button onClick={() => setView('home')} className="flex items-center text-yellow-400 hover:text-yellow-300 mb-6 transition-colors font-medium">
-                        <ChevronLeft size={20} className="mr-1" />
+                    <button onClick={() => setView('home')} className="flex items-center text-yellow-400 hover:text-yellow-300 mb-8 transition-colors font-semibold text-lg md:text-base py-3 px-1" style={{ minHeight: '48px' }}>
+                        <ChevronLeft size={24} className="mr-2" />
                         {t.back}
                     </button>
-                    <div className="bg-slate-800/80 p-8 rounded-xl border border-slate-700 text-center">
+                    <div className="bg-slate-800/90 p-8 md:p-10 rounded-2xl border-2 border-slate-700 text-center">
                         {type === 'thanks' ? (
                             <>
-                                <Heart className="w-12 h-12 text-red-500 mx-auto mb-4" />
-                                <h2 className="text-2xl font-serif font-bold text-white mb-4">{t.thanksHeader}</h2>
-                                <p className="text-slate-300 leading-relaxed mb-6">{t.thanksBody}</p>
-                                <div className="space-y-2 text-slate-400 text-sm">
-                                    <p>Dean Middle School Administration</p>
-                                    <p>Fine Arts Department</p>
-                                    <p>Band Boosters</p>
+                                <Heart className="w-16 h-16 md:w-12 md:h-12 text-red-500 mx-auto mb-6" />
+                                <h2 className="text-3xl md:text-2xl font-serif font-bold text-white mb-6">{t.thanksHeader}</h2>
+                                <p className="text-slate-200 leading-relaxed mb-8 text-lg md:text-base">{t.thanksBody}</p>
+                                <div className="space-y-3 text-slate-300 text-base md:text-sm">
+                                    <p className="font-medium">Dean Middle School Administration</p>
+                                    <p className="font-medium">Fine Arts Department</p>
+                                    <p className="font-medium">Band Boosters</p>
                                 </div>
                             </>
                         ) : (
                             <>
-                                <Calendar className="w-12 h-12 text-blue-500 mx-auto mb-4" />
-                                <h2 className="text-2xl font-serif font-bold text-white mb-4">{t.upcomingHeader}</h2>
-                                <ul className="space-y-4 text-left inline-block">
+                                <Calendar className="w-16 h-16 md:w-12 md:h-12 text-blue-500 mx-auto mb-6" />
+                                <h2 className="text-3xl md:text-2xl font-serif font-bold text-white mb-6">{t.upcomingHeader}</h2>
+                                <ul className="space-y-6 md:space-y-4 text-left inline-block">
                                     <li className="flex flex-col">
-                                        <span className="text-white font-bold">Spring Concert</span>
-                                        <span className="text-slate-400">May 2026</span>
+                                        <span className="text-white font-bold text-xl md:text-lg">Spring Concert</span>
+                                        <span className="text-slate-300 text-lg md:text-base mt-1">May 2026</span>
                                     </li>
                                     <li className="flex flex-col">
-                                        <span className="text-white font-bold">UIL Concert & Sight-reading</span>
-                                        <span className="text-slate-400">April 2026</span>
+                                        <span className="text-white font-bold text-xl md:text-lg">UIL Concert & Sight-reading</span>
+                                        <span className="text-slate-300 text-lg md:text-base mt-1">April 2026</span>
                                     </li>
                                 </ul>
                             </>
@@ -414,14 +432,14 @@
             return (
                 <div className="relative min-h-screen font-sans selection:bg-yellow-500 selection:text-slate-900">
                     <Background />
-                    <div className="sticky top-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-3 flex justify-between items-center shadow-lg">
-                        <span className="text-slate-400 text-xs font-bold tracking-widest uppercase">Dean MS Band</span>
-                        <button onClick={handleLangToggle} className="flex items-center space-x-2 bg-slate-800 hover:bg-slate-700 text-yellow-400 px-3 py-1.5 rounded-full text-sm font-medium transition-colors border border-slate-700">
-                            <Globe size={14} />
+                    <div className="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-md border-b-2 border-slate-800 px-5 py-4 md:py-3 flex justify-between items-center shadow-xl">
+                        <span className="text-slate-300 text-sm md:text-xs font-bold tracking-widest uppercase">Dean MS Band</span>
+                        <button onClick={handleLangToggle} className="flex items-center space-x-2 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-yellow-400 px-4 py-2.5 md:py-2 rounded-full text-base md:text-sm font-semibold transition-colors border-2 border-slate-700" style={{ minHeight: '48px' }}>
+                            <Globe size={18} />
                             <span>{lang === 'en' ? 'Español' : 'English'}</span>
                         </button>
                     </div>
-                    <main className="relative z-10 container mx-auto px-4 py-8 max-w-2xl">
+                    <main className="relative z-10 container mx-auto px-5 md:px-4 py-10 md:py-8 max-w-3xl">
                         {view === 'home' && renderHome()}
                         {view === 'symphonicBand' && renderGroupPage('Symphonic Band', 'symphonicBand')}
                         {view === 'concertWinds' && renderGroupPage('Concert Winds', 'concertWinds')}
@@ -429,7 +447,7 @@
                         {view === 'thanks' && renderInfoPage('thanks')}
                         {view === 'events' && renderInfoPage('events')}
                     </main>
-                    <footer className="relative z-10 text-center py-6 text-slate-600 text-xs">
+                    <footer className="relative z-10 text-center py-8 text-slate-500 text-base md:text-xs">
                         <p>&copy; 2025 Dean Middle School Band</p>
                     </footer>
                 </div>
