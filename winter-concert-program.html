@@ -202,8 +202,33 @@
                 musicians: "Musicians",
                 conductor: "Conductor",
                 back: "Back to Menu",
-                thanksHeader: "Thank You",
-                thanksBody: "A special thank you to our administration, parents, and the community for your continued support of the arts at Dean Middle School.",
+                thanksHeader: "Special Thanks",
+                thanksIntro: "We would like to thank the following individuals for their unwavering support:",
+                thanksStaff: [
+                    "Michael George, Principal",
+                    "Kristen Thorin, Director of Instruction",
+                    "Laura Mosqueda, Secretary",
+                    "John Morrison, Director of Fine Arts",
+                    "Joe Glass, Coordinator of Secondary Music",
+                    "Dr. Ashley Augustave, Paul Guerrero, Will Watkins, Assistant Principals",
+                    "Lakeysa Hobson, T'Keyah Gilliam, Steven Hatcher, Counselors"
+                ],
+                thanksClosing: "And a very special thanks to the Dean Band students for their work throughout the year, the Dean Band parents for supporting the students, and the Jersey Village Band Staff for their weekly support.",
+                fundraiserHeader: "Fundraiser Recognition",
+                fundraiserIntro: "In our recent fundraiser, 68 students and 188 donations raised over $8,000 to make band better for everyone. We would like to specifically acknowledge the families of the following students who raised over $250:",
+                topDonors: [
+                    "Omar Balcazar",
+                    "Xavier Bedigan",
+                    "Vincent De Leon",
+                    "Kain Gee",
+                    "Lauryn & Morgan Graham",
+                    "Roxanne A Gutierrez",
+                    "Ricardo Henriquez",
+                    "Mateo Lizama",
+                    "Guillermo Morales",
+                    "Tommy Nguyen",
+                    "Samuel Picaz"
+                ],
                 upcomingHeader: "Upcoming Events",
                 selections: [
                     { title: "Winter Fanfare", composer: "Arr. Smith" },
@@ -226,8 +251,33 @@
                 musicians: "Músicos",
                 conductor: "Director",
                 back: "Volver al Menú",
-                thanksHeader: "Gracias",
-                thanksBody: "Un agradecimiento especial a nuestra administración, padres y la comunidad por su continuo apoyo a las artes en Dean Middle School.",
+                thanksHeader: "Agradecimientos Especiales",
+                thanksIntro: "Nos gustaría agradecer a las siguientes personas por su apoyo inquebrantable:",
+                thanksStaff: [
+                    "Michael George, Director",
+                    "Kristen Thorin, Directora de Instrucción",
+                    "Laura Mosqueda, Secretaria",
+                    "John Morrison, Director de Bellas Artes",
+                    "Joe Glass, Coordinador de Música Secundaria",
+                    "Dr. Ashley Augustave, Paul Guerrero, Will Watkins, Subdirectores",
+                    "Lakeysa Hobson, T'Keyah Gilliam, Steven Hatcher, Consejeros"
+                ],
+                thanksClosing: "Y un agradecimiento muy especial a los estudiantes de Dean Band por su trabajo durante todo el año, a los padres de Dean Band por apoyar a los estudiantes, y al personal de Jersey Village Band por su apoyo semanal.",
+                fundraiserHeader: "Reconocimiento de Recaudación de Fondos",
+                fundraiserIntro: "En nuestra reciente recaudación de fondos, 68 estudiantes y 188 donaciones recaudaron más de $8,000 para mejorar la banda para todos. Nos gustaría reconocer específicamente a las familias de los siguientes estudiantes que recaudaron más de $250:",
+                topDonors: [
+                    "Omar Balcazar",
+                    "Xavier Bedigan",
+                    "Vincent De Leon",
+                    "Kain Gee",
+                    "Lauryn & Morgan Graham",
+                    "Roxanne A Gutierrez",
+                    "Ricardo Henriquez",
+                    "Mateo Lizama",
+                    "Guillermo Morales",
+                    "Tommy Nguyen",
+                    "Samuel Picaz"
+                ],
                 upcomingHeader: "Próximos Eventos",
                 selections: [
                     { title: "Fanfarria de Invierno", composer: "Arr. Smith" },
@@ -397,22 +447,39 @@
                         <ChevronLeft size={24} className="mr-2" />
                         {t.back}
                     </button>
-                    <div className="bg-slate-800/90 p-8 md:p-10 rounded-2xl border-2 border-slate-700 text-center">
+                    <div className="bg-slate-800/90 p-8 md:p-10 rounded-2xl border-2 border-slate-700">
                         {type === 'thanks' ? (
                             <>
                                 <Heart className="w-16 h-16 md:w-12 md:h-12 text-red-500 mx-auto mb-6" />
-                                <h2 className="text-3xl md:text-2xl font-serif font-bold text-white mb-6">{t.thanksHeader}</h2>
-                                <p className="text-slate-200 leading-relaxed mb-8 text-lg md:text-base">{t.thanksBody}</p>
-                                <div className="space-y-3 text-slate-300 text-base md:text-sm">
-                                    <p className="font-medium">Dean Middle School Administration</p>
-                                    <p className="font-medium">Fine Arts Department</p>
-                                    <p className="font-medium">Band Boosters</p>
+                                <h2 className="text-3xl md:text-2xl font-serif font-bold text-white mb-6 text-center">{t.thanksHeader}</h2>
+
+                                <div className="text-left max-w-2xl mx-auto">
+                                    <p className="text-slate-200 leading-relaxed mb-6 text-lg md:text-base">{t.thanksIntro}</p>
+
+                                    <ul className="space-y-2 text-slate-300 text-base md:text-sm mb-6">
+                                        {t.thanksStaff.map((staff, idx) => (
+                                            <li key={idx} className="leading-relaxed">{staff}</li>
+                                        ))}
+                                    </ul>
+
+                                    <p className="text-slate-200 leading-relaxed mb-8 text-lg md:text-base">{t.thanksClosing}</p>
+
+                                    <div className="border-t-2 border-slate-700 pt-8 mt-8">
+                                        <h3 className="text-yellow-400 font-bold text-xl md:text-lg mb-4 text-center">{t.fundraiserHeader}</h3>
+                                        <p className="text-slate-200 leading-relaxed mb-6 text-base md:text-sm">{t.fundraiserIntro}</p>
+
+                                        <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-slate-300 text-base md:text-sm">
+                                            {t.topDonors.map((donor, idx) => (
+                                                <li key={idx} className="leading-relaxed">• {donor}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
                                 </div>
                             </>
                         ) : (
                             <>
                                 <Calendar className="w-16 h-16 md:w-12 md:h-12 text-blue-500 mx-auto mb-6" />
-                                <h2 className="text-3xl md:text-2xl font-serif font-bold text-white mb-6">{t.upcomingHeader}</h2>
+                                <h2 className="text-3xl md:text-2xl font-serif font-bold text-white mb-6 text-center">{t.upcomingHeader}</h2>
                                 <ul className="space-y-6 md:space-y-4 text-left inline-block">
                                     <li className="flex flex-col">
                                         <span className="text-white font-bold text-xl md:text-lg">Spring Concert</span>
