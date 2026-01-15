@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dean Middle School Band Recruitment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Kalam:wght@400;700&family=Patrick+Hand&display=swap');
+        
+        :root {
+            --paper: #f7f1e8;
+            --ink: #1f2a44;
+            --ink-soft: #33405b;
+            --accent: #2f6ac7;
+            --accent-light: #f0f6ff;
+            --sticky: #ffe27a;
+            --coral: #ff8566;
+            --edge: #e2d5c5;
+        }
+
+        body {
+            font-family: 'Patrick Hand', 'Sora', sans-serif;
+            background: radial-gradient(circle at 20% 20%, rgba(255, 226, 122, 0.18), transparent 28%),
+                        radial-gradient(circle at 80% 30%, rgba(47, 106, 199, 0.12), transparent 32%),
+                        radial-gradient(circle at 30% 80%, rgba(255, 133, 102, 0.14), transparent 30%),
+                        #fdf9f3;
+            color: var(--ink);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        h1, h2, h3, .oswald {
+            font-family: 'Kalam', 'Patrick Hand', 'Sora', sans-serif;
+            letter-spacing: -0.01em;
+        }
+
+        .doodle {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.15;
+            filter: saturate(0.8);
+        }
+
+        .paper-card {
+            background: linear-gradient(180deg, #fffdf8 0%, #f7f0e6 100%);
+            border: 1px solid rgba(31, 42, 68, 0.08);
+            border-radius: 22px;
+            box-shadow: 0 18px 45px rgba(31, 42, 68, 0.12),
+                        0 4px 12px rgba(31, 42, 68, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .paper-card:before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(135deg, transparent 0 18px, rgba(31, 42, 68, 0.02) 18px 36px);
+            pointer-events: none;
+        }
+
+        .note-card {
+            background: var(--sticky);
+            border: 1px solid rgba(31, 42, 68, 0.15);
+            box-shadow: 0 18px 25px rgba(0,0,0,0.08);
+            transform: rotate(-1.5deg);
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-note {
+            display: inline-block;
+            padding: 18px 22px;
+            border-radius: 4px;
+            box-shadow: 0 22px 36px rgba(0,0,0,0.12), 0 6px 14px rgba(0,0,0,0.08);
+            transform: rotate(-1deg);
+            margin-top: 16px;
+            overflow: visible;
+        }
+
+        .hero-note::before {
+            content: '';
+            position: absolute;
+            width: 38px;
+            height: 38px;
+            right: -10px;
+            top: -10px;
+            background: linear-gradient(135deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.04) 55%, transparent 75%);
+            clip-path: polygon(0 0, 100% 0, 0 100%);
+            box-shadow: -6px 10px 18px rgba(0,0,0,0.18);
+            transform: rotate(4deg);
+        }
+
+        .hero-note h1 {
+            margin: 0;
+            color: var(--ink);
+            letter-spacing: -0.02em;
+            text-transform: none;
+            line-height: 1.05;
+        }
+
+        .note-card::after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 78px;
+            height: 16px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.65), rgba(255,255,255,0.2));
+            border-radius: 6px;
+            box-shadow: 0 6px 10px rgba(0,0,0,0.12);
+        }
+
+        .torn-top {
+            position: relative;
+        }
+        .torn-top::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: -18px;
+            height: 28px;
+            background: radial-gradient(circle at 12px 14px, transparent 12px, var(--paper) 12px),
+                        radial-gradient(circle at 52px 10px, transparent 12px, var(--paper) 12px),
+                        radial-gradient(circle at 92px 12px, transparent 10px, var(--paper) 10px),
+                        var(--paper);
+            background-repeat: repeat-x;
+            background-size: 120px 28px;
+        }
+
+        .ripped-edge {
+            border: 2px dashed rgba(31, 42, 68, 0.15);
+            border-radius: 18px;
+        }
+
+        .hero-collage {
+            background: linear-gradient(135deg, #fffaf1 0%, #eef4ff 100%);
+            border: 2px solid rgba(31, 42, 68, 0.1);
+            border-radius: 28px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 24px 60px rgba(31, 42, 68, 0.15);
+        }
+
+        .hero-collage::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 226, 122, 0.2), transparent 36%),
+                        radial-gradient(circle at 70% 70%, rgba(47, 106, 199, 0.16), transparent 32%);
+            pointer-events: none;
+        }
+
+        .btn-toggle {
+            transition: all 0.25s ease;
+            border: 1px solid rgba(31, 42, 68, 0.18);
+            background: #fff7e8;
+            color: var(--ink-soft);
+        }
+
+        .active-tab {
+            background: var(--accent);
+            color: #fdf9f3;
+            box-shadow: 0 14px 28px rgba(47, 106, 199, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .lang-btn.active {
+            color: var(--accent);
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .step-number {
+            background: var(--ink);
+            color: #fdf9f3;
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: 800;
+            flex-shrink: 0;
+            box-shadow: 0 12px 24px rgba(31, 42, 68, 0.2);
+        }
+
+        .scribble {
+            font-family: 'Kalam', cursive;
+            color: var(--coral);
+            letter-spacing: 0.01em;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Navigation/Toggle -->
+    <nav class="fixed top-0 w-full z-50 no-print">
+        <div class="max-w-6xl mx-auto px-4 pt-4">
+            <div class="paper-card torn-top px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-4">
+                    <img src="https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1753973788/cfisdnet/hyy4sq3zm1mfhuw38yie/DeanM_70thAnniversary-2.png" alt="Dean Middle School" class="w-12 h-12 object-contain drop-shadow-lg">
+                    <div>
+                        <p class="text-xs uppercase tracking-[0.18em] text-[var(--ink-soft)]">Dean Middle School Band</p>
+                        <p class="font-extrabold text-lg text-[var(--ink)]">Fun & Futures 2025</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-6">
+                    <div class="flex gap-3 text-xs font-bold tracking-widest border-r border-[rgba(31,42,68,0.12)] pr-6">
+                        <button id="lang-en" onclick="setLanguage('en')" class="lang-btn active transition-colors hover:text-[var(--accent)]">EN</button>
+                        <button id="lang-es" onclick="setLanguage('es')" class="lang-btn transition-colors hover:text-[var(--accent)]">ES</button>
+                    </div>
+                    <div class="bg-white p-1 rounded-2xl flex gap-1 border border-[rgba(31,42,68,0.12)] shadow-sm">
+                        <button id="nav-beginner" onclick="switchMode('beginner')" class="btn-toggle px-5 py-2 rounded-xl font-bold text-[11px] active-tab uppercase" data-i18n="nav-new">NEW STUDENTS</button>
+                        <button id="nav-returning" onclick="switchMode('returning')" class="btn-toggle px-5 py-2 rounded-xl font-bold text-[11px] text-[var(--ink-soft)] uppercase" data-i18n="nav-returning">RETURNING STUDENTS</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-32 pb-20 px-4 max-w-6xl mx-auto relative">
+        <img class="doodle" style="top: 12%; left: 6%; width: 120px" src="https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons/images/svg/musicbrainz.svg" alt="doodle">
+        <img class="doodle" style="bottom: 14%; right: 8%; width: 110px" src="https://cdn.jsdelivr.net/gh/twitter/twemoji/assets/svg/1f4da.svg" alt="doodle">
+
+        <!-- Hero Section -->
+        <section class="hero-collage p-6 md:p-12 text-center mb-12 relative">
+            <div id="banner-dates" class="absolute right-4 bottom-8 md:right-6 md:bottom-10 rotate-[4deg] note-card px-4 py-3 text-xs font-bold uppercase text-[var(--ink)] z-20 pointer-events-none">April 28 & 30</div>
+            <div class="relative z-10 grid md:grid-cols-[1.2fr_0.8fr] items-center gap-8">
+                <div class="text-left md:text-left space-y-4">
+                    <p class="scribble text-sm">Grades 6–8 • No experience needed</p>
+                    <div class="note-card hero-note">
+                        <h1 id="main-title" class="text-4xl md:text-5xl font-extrabold leading-tight">Start Your Musical Adventure</h1>
+                    </div>
+                    <p class="text-lg md:text-xl font-semibold text-[var(--ink-soft)]" data-i18n="tagline">Strength of the Herd, Power of the Sound</p>
+                </div>
+                <div class="relative flex justify-center">
+                    <div class="ripped-edge bg-[var(--accent-light)] px-4 py-3 rounded-xl rotate-[2.5deg] shadow-xl">
+                        <img src="https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1753973788/cfisdnet/hyy4sq3zm1mfhuw38yie/DeanM_70thAnniversary-2.png" alt="Dean 70 Years" class="w-52 md:w-64 object-contain drop-shadow-xl">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Highlights Section -->
+            <div class="lg:col-span-2 space-y-8">
+                <div class="paper-card p-8">
+                    <h2 id="highlights-title" class="text-2xl font-extrabold mb-8 flex items-center gap-4 tracking-tight">
+                        <span class="w-3 h-10 bg-[var(--accent)] rounded-full shadow-md"></span>
+                        Why Join the Program?
+                    </h2>
+                    
+                    <div id="highlights-container" class="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
+                        <!-- Dynamic Highlights -->
+                    </div>
+                </div>
+
+                <!-- Featured Action Shot -->
+                <div class="paper-card overflow-hidden h-64 shadow-lg flex">
+                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/yCbTPwgtr-M?autoplay=1&controls=0&loop=1&mute=1&playlist=yCbTPwgtr-M" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border: none; display: block;"></iframe>
+                </div>
+            </div>
+
+            <!-- Registration/Next Steps Sidebar -->
+            <div class="space-y-8">
+                <div class="paper-card p-8 border-[rgba(47,106,199,0.18)] bg-white">
+                    <h2 class="text-xl font-extrabold mb-4 text-[var(--ink)] tracking-tight flex items-center gap-3" data-i18n="steps-title">
+                        <span class="w-2 h-8 bg-[var(--accent)] rounded-full"></span>
+                        SECURE YOUR SPOT
+                    </h2>
+                    <p class="text-[var(--ink-soft)] text-sm mb-8 leading-relaxed" data-i18n="steps-intro">To ensure this program fits into your schedule and avoid conflicts, follow these instructions exactly:</p>
+                    
+                    <div id="steps-container" class="space-y-8">
+                        <!-- Dynamic Steps -->
+                    </div>
+                </div>
+
+                <!-- Embedded Presentation -->
+                <div class="paper-card overflow-hidden shadow-lg">
+                    <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vR1Rg0zh0mcbYH7zTg3m5BYzyMPK8S7WjEeR1apLWIy99jRivZQsBEJ4mV_GWmkeyhmFFZY_rXRmAwZ/pubembed?start=true&rm=minimal&loop=true&delayms=3000" frameborder="0" width="100%" height="300px" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" style="border: none; display: block;"></iframe>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="paper-card p-8 text-center md:text-left">
+                    <h3 class="text-xs font-bold mb-4 text-[rgba(31,42,68,0.6)] uppercase tracking-widest" data-i18n="questions">Questions?</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-[var(--ink)] font-bold text-sm">Paul Hogue</p>
+                            <a href="mailto:paul.hogue@cfisd.net?subject=Dean%20Band%20Questions" class="text-xs hover:underline text-[var(--ink-soft)]">paul.hogue@cfisd.net</a>
+                        </div>
+                        <div>
+                            <p class="text-[var(--ink)] font-bold text-sm">W. Justin Butterfras</p>
+                            <span id="butterfras-es-note" class="text-[10px] text-[var(--ink-soft)] italic" style="display:none;">(habla español)</span>
+                            <a href="mailto:william.butterfras@cfisd.net?subject=Dean%20Band%20Questions" class="text-xs hover:underline text-[var(--ink-soft)]">william.butterfras@cfisd.net</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-[rgba(31,42,68,0.12)] py-10 text-center text-[var(--ink-soft)]">
+        <p class="tracking-widest text-xs uppercase font-bold">Dean Middle School Band © 2025</p>
+    </footer>
+
+    <script>
+        let currentLang = 'en';
+        let currentMode = 'beginner';
+
+        const translations = {
+            en: {
+                "nav-new": "NEW STUDENTS",
+                "nav-returning": "RETURNING STUDENTS",
+                "tagline": "Strength of the Herd, Power of the Sound",
+                "steps-title": "SECURE YOUR SPOT",
+                "steps-intro": "To ensure this program fits into your schedule and avoid conflicts, follow these instructions exactly:",
+                "questions": "Questions?",
+                "placeholder-label": "Featured Action Shot"
+            },
+            es: {
+                "nav-new": "ESTUDIANTES NUEVOS",
+                "nav-returning": "ESTUDIANTES QUE REGRESAN",
+                "tagline": "La Fuerza de la Manada, El Poder del Sonido",
+                "steps-title": "ASEGURA TU LUGAR",
+                "steps-intro": "Para asegurar que este programa encaje en tu horario y evitar conflictos, sigue estas instrucciones exactamente:",
+                "questions": "¿Preguntas?",
+                "placeholder-label": "Foto de Acción Destacada"
+            }
+        };
+
+        const contentData = {
+            en: {
+                beginner: {
+                    title: "Start Your Musical Adventure",
+                    highlightsTitle: "Why Join the Program?",
+                    highlights: [
+                        { title: "Find Your Instrument", text: "No experience needed! Meet with us on April 28 & 30 to choose your instrument and find your perfect match." },
+                        { title: "Instant Community", text: "Band is a family—your home at school. You’ll make friends and memories that will last a lifetime." },
+                        { title: "Perform Everywhere", text: "From the school stage to local community events—be the star of the show and build your confidence." },
+                        { title: "Skills for Life", text: "Boost your brainpower, discipline, and creativity. Studies show musicians excel in all subjects!" }
+                    ],
+                    steps: [
+                        { title: "List as Choice #1", text: "Place Band as your FIRST choice on your course selection sheet to guarantee your spot." },
+                        { title: "Choose Your Sound", text: "April 28 & 30: Come meet your future instrument soul-mate. <br><br><button onclick=\"window.open('https://grasshoppersignup.com/respond/34b266ed-437c-49ea-adcc-c073dd989c74', '_blank')\" style=\"background-color: #01A2B4; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 14px;\">Sign Up Now</button>" },
+                        { title: "Stay Tuned", text: "Information is sent via Remind. <button onclick=\"window.open('https://www.remind.com/join/dmsbb2627', '_blank')\" style=\"background-color: #01A2B4; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 14px;\">Join our Remind</button><br> or text @dmsbb2627 to the number 81010 " }
+                    ]
+                },
+                returning: {
+                    title: "The Journey Continues",
+                    highlightsTitle: "Returning Student Highlights",
+                    highlights: [
+                        { title: "HS Football Games", text: "8th Graders get a VIP pass to play with the High School Marching Band under the Friday Night Lights." },
+                        { title: "Region Band Auditions", text: "Take your playing to the next level. Compete for a chair among the top musicians in the area." },
+                        { title: "Solo & Ensemble", text: "Showcase your individual talent. Choose your own music, perform for judges, and earn medals." },
+                        { title: "Houston Symphony", text: "Hear the finest musicians around! Field trip to experience the professional sounds of the Symphony." }
+                    ],
+                    steps: [
+                        { title: "List as Choice #1", text: "Registrars prioritize first choices. Mark Band #1 to prevent scheduling conflicts." },
+                        { title: "Prepare Your Scales", text: "Keep practicing! Scale performance determines correct band placement for next year." },
+                        { title: "Keep Showing Up", text: "Turn in forms to counselors and attend all required end-of-year band activities." }
+                    ]
+                }
+            },
+            es: {
+                beginner: {
+                    title: "Comienza Tu Aventura Musical",
+                    highlightsTitle: "¿Por Qué Unirte al Programa?",
+                    highlights: [
+                        { title: "Encuentra Tu Instrumento", text: "¡No se necesita experiencia! Reúnete con nosotros el 28 y 30 de abril para elegir tu instrumento y encontrar tu pareja perfecta." },
+                        { title: "Comunidad Instantánea", text: "La banda es una familia: tu hogar en la escuela. Harás amigos y recuerdos que durarán toda la vida." },
+                        { title: "Toca en Todas Partes", text: "Desde el escenario escolar hasta eventos comunitarios: sé la estrella del espectáculo y desarrolla tu confianza." },
+                        { title: "Habilidades para la Vida", text: "Aumenta tu capacidad cerebral, disciplina y creatividad. ¡Los estudios muestran que los músicos sobresalen en todas las materias!" }
+                    ],
+                    steps: [
+                        { title: "Lista como Opción #1", text: "Coloca la Banda como tu PRIMERA opción en tu hoja de selección de cursos para garantizar tu lugar." },
+                        { title: "Elige Tu Sonido", text: "28 y 30 de abril: Ven a conocer a tu futura alma gemela instrumental. <br><br><button onclick=\"window.open('https://grasshoppersignup.com/respond/34b266ed-437c-49ea-adcc-c073dd989c74', '_blank')\" style=\"background-color: #01A2B4; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 14px;\">Inscríbete Ahora</button>" },
+                        { title: "Mantente Informado", text: "La información se envía por Remind. <button onclick=\"window.open('https://www.remind.com/join/dmsbb2627', '_blank')\" style=\"background-color: #01A2B4; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 14px;\">Unirse a Remind</button> <br>o envía un texto a @dmsbb2627 al número 81010 " }
+                    ]
+                },
+                returning: {
+                    title: "El Viaje Continúa",
+                    highlightsTitle: "Aspectos Destacados para Estudiantes que Regresan",
+                    highlights: [
+                        { title: "Juegos de Fútbol de HS", text: "Estudiantes de 8vo grado: Obtengan un pase VIP para tocar con la Banda de Marcha de la Preparatoria bajo las luces del viernes por la noche." },
+                        { title: "Audiciones de Banda de Región", text: "Lleva tu interpretación al siguiente nivel. Compite por una silla entre los mejores músicos del área." },
+                        { title: "Concurso de Solos y Conjuntos", text: "Muestra tu talento individual. Elige tu propia música, toca para los jueces y gana medallas." },
+                        { title: "Sinfónica de Houston", text: "¡Escucha a los mejores músicos! Excursión para experimentar los sonidos profesionales de la Sinfonía." }
+                    ],
+                    steps: [
+                        { title: "Lista como Opción #1", text: "Los registradores priorizan las primeras opciones. Marca Banda #1 para evitar conflictos de horario." },
+                        { title: "Prepara Tus Escalas", text: "¡Sigue practicando! El desempeño de las escalas determina la colocación correcta en la banda para el próximo año." },
+                        { title: "Sigue Asistiendo", text: "Entrega los formularios a los consejeros y asiste a todas las actividades de banda requeridas de fin de año." }
+                    ]
+                }
+            }
+        };
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+            document.getElementById('lang-es').classList.toggle('active', lang === 'es');
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if(translations[lang][key]) el.innerText = translations[lang][key];
+            });
+            const esNote = document.getElementById('butterfras-es-note');
+            if (esNote) esNote.style.display = lang === 'es' ? 'block' : 'none';
+            renderDynamicContent();
+        }
+
+        function switchMode(mode) {
+            currentMode = mode;
+            document.getElementById('nav-beginner').className = `btn-toggle px-5 py-2 rounded-xl font-bold text-[11px] uppercase ${mode === 'beginner' ? 'active-tab' : 'text-[var(--ink-soft)]'}`;
+            document.getElementById('nav-returning').className = `btn-toggle px-5 py-2 rounded-xl font-bold text-[11px] uppercase ${mode === 'returning' ? 'active-tab' : 'text-[var(--ink-soft)]'}`;
+            renderDynamicContent();
+        }
+
+        function renderDynamicContent() {
+            const data = contentData[currentLang][currentMode];
+            document.getElementById('main-title').innerText = data.title;
+            document.getElementById('highlights-title').innerHTML = `<span class="w-3 h-10 bg-[var(--accent)] rounded-full shadow-md"></span>${data.highlightsTitle}`;
+            const dateBanner = document.getElementById('banner-dates');
+            if (dateBanner) dateBanner.style.display = currentMode === 'beginner' ? 'block' : 'none';
+            
+            const highlightsContainer = document.getElementById('highlights-container');
+            highlightsContainer.innerHTML = data.highlights.map((item, idx) => `
+                <div class="relative overflow-hidden p-6 rounded-2xl ripped-edge bg-white shadow-md ${idx % 2 === 0 ? 'rotate-[-1.2deg]' : 'rotate-[1.1deg]'}">
+                    <h3 class="font-extrabold text-[var(--ink)] mb-2 text-base uppercase tracking-tight">${item.title}</h3>
+                    <p class="text-xs md:text-sm text-[var(--ink-soft)] leading-relaxed">${item.text}</p>
+                </div>
+            `).join('');
+
+            const stepsContainer = document.getElementById('steps-container');
+            stepsContainer.innerHTML = data.steps.map((step, index) => `
+                <div class="flex gap-4 items-start ${index % 2 === 0 ? 'rotate-[-0.8deg]' : 'rotate-[0.9deg]'}">
+                    <div class="step-number text-sm">${index + 1}</div>
+                    <div class="relative bg-[var(--accent-light)] p-4 rounded-xl border border-[rgba(31,42,68,0.12)] shadow-sm">
+                        <h4 class="font-extrabold text-[var(--ink)] mb-1 text-sm uppercase">${step.title}</h4>
+                        <p class="text-[12px] text-[var(--ink-soft)] leading-relaxed">${step.text}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize based on Google Web App parameters
+        window.onload = () => {
+            // Check if we are in the Google environment
+            if (typeof google !== 'undefined' && google.script && google.script.url) {
+                google.script.url.getLocation(function(location) {
+                    const params = location.parameter;
+                    if (params.lang && translations[params.lang.toLowerCase()]) {
+                        currentLang = params.lang.toLowerCase();
+                    }
+                    if (params.mode && contentData[currentLang][params.mode.toLowerCase()]) {
+                        currentMode = params.mode.toLowerCase();
+                    }
+                    setLanguage(currentLang);
+                    switchMode(currentMode);
+                });
+            } else {
+                // Fallback for local testing
+                const urlParams = new URLSearchParams(window.location.search);
+                const lang = urlParams.get('lang');
+                const mode = urlParams.get('mode');
+                if (lang && translations[lang.toLowerCase()]) currentLang = lang.toLowerCase();
+                if (mode && contentData[currentLang][mode.toLowerCase()]) currentMode = mode.toLowerCase();
+                setLanguage(currentLang);
+                switchMode(currentMode);
+            }
+        };
+    </script>
+</body>
+</html>
