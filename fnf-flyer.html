@@ -282,7 +282,7 @@
 
                 <!-- Embedded Presentation -->
                 <div class="paper-card overflow-hidden shadow-lg">
-                    <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vR1Rg0zh0mcbYH7zTg3m5BYzyMPK8S7WjEeR1apLWIy99jRivZQsBEJ4mV_GWmkeyhmFFZY_rXRmAwZ/pubembed?start=true&rm=minimal&loop=true&delayms=3000" frameborder="0" width="100%" height="300px" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" style="border: none; display: block;"></iframe>
+                    <iframe id="presentation-embed" src="https://docs.google.com/presentation/d/e/2PACX-1vR1Rg0zh0mcbYH7zTg3m5BYzyMPK8S7WjEeR1apLWIy99jRivZQsBEJ4mV_GWmkeyhmFFZY_rXRmAwZ/pubembed?start=true&rm=minimal&loop=true&delayms=3000" frameborder="0" width="100%" height="300px" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" style="border: none; display: block;"></iframe>
                 </div>
 
                 <!-- Contact Info -->
@@ -347,7 +347,7 @@
                     ],
                     steps: [
                         { title: "List as Choice #1", text: "Place Band as your FIRST choice on your course selection sheet to guarantee your spot." },
-                        { title: "Choose Your Sound", text: "April 28 & 30: Come meet your future instrument soul-mate. <br><br><button onclick=\"window.open('https://grasshoppersignup.com/respond/34b266ed-437c-49ea-adcc-c073dd989c74', '_blank')\" style=\"background-color: #01A2B4; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 14px;\">Sign Up Now</button>" },
+                        { title: "Choose Your Sound", text: "April 28 & 30: Come meet your future instrument soul-mate. <br><br><button onclick=\"window.open('https://www.signupgenius.com/go/20F0B44A4AC2FA0F85-61723901-dean', '_blank')\" style=\"background-color: #01A2B4; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 14px;\">Sign Up Now</button>" },
                         { title: "Stay Tuned", text: "Information is sent via Remind. <button onclick=\"window.open('https://www.remind.com/join/dmsbb2627', '_blank')\" style=\"background-color: #01A2B4; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 14px;\">Join our Remind</button><br> or text @dmsbb2627 to the number 81010 " }
                     ]
                 },
@@ -379,7 +379,7 @@
                     ],
                     steps: [
                         { title: "Lista como Opción #1", text: "Coloca la Banda como tu PRIMERA opción en tu hoja de selección de cursos para garantizar tu lugar." },
-                        { title: "Elige Tu Sonido", text: "28 y 30 de abril: Ven a conocer a tu futura alma gemela instrumental. <br><br><button onclick=\"window.open('https://grasshoppersignup.com/respond/34b266ed-437c-49ea-adcc-c073dd989c74', '_blank')\" style=\"background-color: #01A2B4; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 14px;\">Inscríbete Ahora</button>" },
+                        { title: "Elige Tu Sonido", text: "28 y 30 de abril: Ven a conocer a tu futura alma gemela instrumental. <br><br><button onclick=\"window.open('https://www.signupgenius.com/go/20F0B44A4AC2FA0F85-61723901-dean', '_blank')\" style=\"background-color: #01A2B4; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 14px;\">Inscríbete Ahora</button>" },
                         { title: "Mantente Informado", text: "La información se envía por Remind. <button onclick=\"window.open('https://www.remind.com/join/dmsbb2627', '_blank')\" style=\"background-color: #01A2B4; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 14px;\">Unirse a Remind</button> <br>o envía un texto a @dmsbb2627 al número 81010 " }
                     ]
                 },
@@ -446,6 +446,14 @@
                     </div>
                 </div>
             `).join('');
+
+            // Swap presentation src for Spanish when needed
+            const pres = document.getElementById('presentation-embed');
+            if (pres) {
+                pres.src = currentLang === 'es'
+                    ? 'https://docs.google.com/presentation/d/e/2PACX-1vQdbF6f786IT6CSr39ZBu5PeJeGYrv30L5B2pvGzcEqC8wkQX8p38YL_T4h54S_qhz6midBRfH3cgjA/pubembed?start=true&loop=true&delayms=3000'
+                    : 'https://docs.google.com/presentation/d/e/2PACX-1vR1Rg0zh0mcbYH7zTg3m5BYzyMPK8S7WjEeR1apLWIy99jRivZQsBEJ4mV_GWmkeyhmFFZY_rXRmAwZ/pubembed?start=true&rm=minimal&loop=true&delayms=3000';
+            }
         }
 
         // Initialize based on Google Web App parameters
