@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dean Beginning Band — Info</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Work+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        :root {
+            --blue: #1a4fa3;
+            --blue-dark: #0f3268;
+            --silver: #c5cdd8;
+            --black: #0a0a0a;
+            --white: #ffffff;
+            --dot: rgba(10, 10, 10, 0.14);
+            --border: 4px solid var(--black);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Work Sans', system-ui, sans-serif;
+            background-color: var(--white);
+            color: var(--black);
+            line-height: 1.55;
+            overflow-x: hidden;
+        }
+
+        .benday {
+            background-image: radial-gradient(circle, var(--dot) 1.2px, transparent 1.2px);
+            background-size: 8px 8px;
+        }
+
+        .benday-blue {
+            background-color: var(--blue);
+            background-image: radial-gradient(circle, rgba(255, 255, 255, 0.22) 1.2px, transparent 1.2px);
+            background-size: 8px 8px;
+        }
+
+        h1, h2, h3, .display {
+            font-family: 'Archivo Black', 'Work Sans', sans-serif;
+            letter-spacing: 0.02em;
+            line-height: 1.1;
+        }
+
+        button, a.panel-btn {
+            font-family: inherit;
+            cursor: pointer;
+            border: var(--border);
+            background: var(--white);
+            color: var(--black);
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            transition: transform 0.08s ease, box-shadow 0.08s ease;
+            box-shadow: 4px 4px 0 var(--black);
+        }
+
+        button:hover, a.panel-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 var(--black);
+        }
+
+        button:active, a.panel-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 var(--black);
+        }
+
+        button.primary {
+            background: var(--blue);
+            color: var(--white);
+        }
+
+        button.ghost {
+            background: var(--silver);
+        }
+
+        .card {
+            border: var(--border);
+            background: var(--white);
+            box-shadow: 6px 6px 0 var(--black);
+        }
+
+        .comic-panel {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .comic-panel::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            border: var(--border);
+        }
+
+        .halftone-overlay {
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle, rgba(0, 0, 0, 0.12) 1px, transparent 1px);
+            background-size: 6px 6px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        // ─── CONFIG: update placeholders here ───────────────────────────────
+        const STORE_LINKS = {
+            hhMusic: '#', // H&H Music school link
+            musicAndArts: '#', // Music & Arts school link
+        };
+
+        const INSTRUMENTS = [
+            {
+                id: 'flute',
+                name: 'Flute',
+                family: 'Woodwind',
+                image: 'https://upload.wikimedia.org/wikipedia/commons/b/bf/Western_Concert_Flute.jpg',
+                imageCredit: 'Wikimedia Commons',
+                youtube: '#',
+                description: 'The flute is the highest-pitched instrument in the beginning band. Sound is made by blowing across a hole in the headjoint, and players use precise fingerings along the keys. Flutes are lightweight and easy to carry, making them a popular first choice.',
+                supplies: 'Recommended brands and supplies — coming soon. Check back or ask your director.',
+            },
+            {
+                id: 'oboe',
+                name: 'Oboe',
+                family: 'Woodwind',
+                image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Oboe_modern.jpg/640px-Oboe_modern.jpg',
+                imageCredit: 'Wikimedia Commons',
+                youtube: '#',
+                description: 'The oboe has a distinctive, focused tone and uses a double reed. It plays an important melodic role in concert band. The school provides oboes for students — you will need personal reeds and a few small accessories.',
+                supplies: 'Recommended brands and supplies — coming soon.',
+            },
+            {
+                id: 'bassoon',
+                name: 'Bassoon',
+                family: 'Woodwind',
+                image: 'https://upload.wikimedia.org/wikipedia/commons/0/08/Bassoon.jpg',
+                imageCredit: 'Wikimedia Commons',
+                youtube: '#',
+                description: 'The bassoon is the lowest woodwind in beginning band, with a rich, mellow sound. It is a larger double-reed instrument assembled from several sections. School-owned bassoons are available for students who are matched to this instrument.',
+                supplies: 'Recommended brands and supplies — coming soon.',
+            },
+            {
+                id: 'clarinet',
+                name: 'Clarinet',
+                family: 'Woodwind',
+                image: 'https://upload.wikimedia.org/wikipedia/commons/0/01/Clarinet.jpg',
+                imageCredit: 'Wikimedia Commons',
+                youtube: '#',
+                description: 'The clarinet uses a single reed and produces a warm, flexible tone across its range. Clarinets are common in concert band, jazz, and many world-music traditions. Students learn to assemble the instrument and care for their reeds from day one.',
+                supplies: 'Recommended brands and supplies — coming soon.',
+            },
+            {
+                id: 'alto-sax',
+                name: 'Alto Saxophone',
+                family: 'Woodwind',
+                image: 'https://upload.wikimedia.org/wikipedia/commons/f/f8/Alto_saxophone.jpg',
+                imageCredit: 'Wikimedia Commons',
+                youtube: '#',
+                description: 'The alto saxophone is a curved woodwind with a single reed — though made of brass, it is classified as a woodwind because of how sound is produced. It is widely used in band, jazz, and popular music. Its size is manageable for most beginning students.',
+                supplies: 'Recommended brands and supplies — coming soon.',
+            },
+            {
+                id: 'trumpet',
+                name: 'Trumpet',
+                family: 'Brass',
+                image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Trumpet_1.jpg/640px-Trumpet_1.jpg',
+                imageCredit: 'Wikimedia Commons',
+                youtube: '#',
+                description: 'The trumpet is the highest brass voice in beginning band. Players buzz their lips into a cup mouthpiece to create sound. Trumpets are compact, project clearly, and appear in everything from concert band to marching band and jazz.',
+                supplies: 'Recommended brands and supplies — coming soon.',
+            },
+            {
+                id: 'french-horn',
+                name: 'French Horn',
+                family: 'Brass',
+                image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/French_horn_front.png/320px-French_horn_front.png',
+                imageCredit: 'Wikimedia Commons',
+                youtube: '#',
+                description: 'The French horn has a round, noble tone and uses a funnel-shaped mouthpiece. Its coiled tubing makes it one of the longer brass instruments. The school provides French horns for students matched to this instrument.',
+                supplies: 'Recommended brands and supplies — coming soon.',
+            },
+            {
+                id: 'trombone',
+                name: 'Trombone',
+                family: 'Brass',
+                image: 'https://upload.wikimedia.org/wikipedia/commons/2/29/Trombone_1.jpg',
+                imageCredit: 'Wikimedia Commons',
+                youtube: '#',
+                description: 'The trombone is unique among band instruments because it uses a slide instead of valves to change pitch. It has a bold, resonant sound and plays melody, harmony, and rhythmic figures. Trombones are a core voice in any concert band.',
+                supplies: 'Recommended brands and supplies — coming soon.',
+            },
+            {
+                id: 'euphonium',
+                name: 'Euphonium',
+                family: 'Brass',
+                image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Euphonium_Boosey_and_hawkes.jpg/640px-Euphonium_Boosey_and_hawkes.jpg',
+                imageCredit: 'Wikimedia Commons',
+                youtube: '#',
+                description: 'The euphonium (sometimes called baritone in beginning band) has a warm, lyrical tenor-brass sound. It uses valves like a trumpet but in a lower range. School-owned euphoniums are available for students who are placed on this instrument.',
+                supplies: 'Recommended brands and supplies — coming soon.',
+            },
+            {
+                id: 'tuba',
+                name: 'Tuba',
+                family: 'Brass',
+                image: 'https://upload.wikimedia.org/wikipedia/commons/1/1e/Tuba.jpg',
+                imageCredit: 'Wikimedia Commons',
+                youtube: '#',
+                description: 'The tuba is the lowest and largest brass instrument, providing the foundation of the band’s sound. Despite its size, beginners learn manageable parts that support the ensemble. The school provides tubas for students matched to this instrument.',
+                supplies: 'Recommended brands and supplies — coming soon.',
+            },
+            {
+                id: 'percussion',
+                name: 'Percussion',
+                family: 'Percussion',
+                isCollage: true,
+                images: [
+                    'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Snare_drum.jpg/320px-Snare_drum.jpg',
+                    'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Xylophone.jpg/320px-Xylophone.jpg',
+                    'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Triangle_Instruments.JPG/320px-Triangle_Instruments.JPG',
+                ],
+                imageCredit: 'Wikimedia Commons',
+                youtube: '#',
+                description: 'Percussion is much more than just drums. In beginning band, percussion students take a total percussion approach — developing skills across the full family of percussion instruments, including snare drum, keyboard instruments like xylophone and marimba, and accessory instruments like maracas, triangle, and cymbals. Percussionists are some of the most well-rounded musicians in the band.',
+                supplies: 'Sticks, mallets, practice pad, bell kit, and bag recommendations — coming soon.',
+            },
+        ];
+
+        const MENU = [
+            { id: 'what-is-band', label: 'What is Band?' },
+            { id: 'when-meet', label: 'When Does Band Meet?' },
+            { id: 'in-class', label: 'What Will I Do in Class?' },
+            { id: 'instruments', label: 'What Instrument Will I Play?' },
+            { id: 'choose', label: 'How Do I Choose My Instrument?' },
+            { id: 'supplies', label: 'What Do I Need?' },
+            { id: 'get-instrument', label: 'How Do I Get My Instrument?' },
+            { id: 'contact', label: 'Contact Us' },
+        ];
+
+        const CONTACTS = [
+            { name: 'Paul Hogue', role: 'Head Band Director', email: 'paul.hogue@cfisd.net', audience: 'parents' },
+            { name: 'Justin Butterfras', role: '', email: 'william.butterfras@cfisd.net', audience: 'parents' },
+            { name: 'Andrew Vanegas', role: '', email: 'andrew.vanegas@cfisd.net', audience: 'parents' },
+        ];
+
+        // ─── Mustang (Lichtenstein-style flat outline) ─────────────────────────
+        const MustangMark = ({ size = 72, className = '' }) => (
+            <svg width={size} height={size} viewBox="0 0 100 80" className={className} aria-hidden="true">
+                <path
+                    d="M12 52 L22 38 L18 28 L32 22 L42 12 L58 10 L72 18 L88 16 L92 28 L78 34 L82 48 L74 58 L58 62 L44 70 L28 66 L14 58 Z"
+                    fill="#1a4fa3"
+                    stroke="#0a0a0a"
+                    strokeWidth="3"
+                />
+                <path d="M38 44 L52 40 L56 48 L42 52 Z" fill="#fff" stroke="#0a0a0a" strokeWidth="2" />
+                <circle cx="68" cy="50" r="4" fill="#fff" stroke="#0a0a0a" strokeWidth="2" />
+                <path d="M20 54 Q8 58 6 48" fill="none" stroke="#0a0a0a" strokeWidth="3" />
+            </svg>
+        );
+
+        const BenDayStrip = () => (
+            <div
+                className="benday"
+                style={{ height: 12, borderTop: 'var(--border)', borderBottom: 'var(--border)' }}
+            />
+        );
+
+        const Header = () => (
+            <header className="benday-blue" style={{ borderBottom: 'var(--border)', color: 'var(--white)' }}>
+                <div style={{ maxWidth: 900, margin: '0 auto', padding: '1.25rem 1rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                        <MustangMark size={64} />
+                        <div>
+                            <p style={{ margin: 0, fontWeight: 700, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
+                                Dean Middle School · Mustangs
+                            </p>
+                            <h1 className="display" style={{ margin: '0.15rem 0 0', fontSize: 'clamp(1.5rem, 5vw, 2.25rem)' }}>
+                                Beginning Band
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+                <BenDayStrip />
+            </header>
+        );
+
+        const NavBar = ({ onBack, onHome, title }) => (
+            <nav
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.75rem',
+                    flexWrap: 'wrap',
+                    padding: '1rem',
+                    maxWidth: 900,
+                    margin: '0 auto',
+                    borderBottom: 'var(--border)',
+                    background: 'var(--silver)',
+                }}
+            >
+                {onBack && (
+                    <button type="button" className="ghost" onClick={onBack} aria-label="Go back">
+                        ← Back
+                    </button>
+                )}
+                <button type="button" onClick={onHome} aria-label="Home">
+                    Home
+                </button>
+                {title && (
+                    <h2 className="display" style={{ margin: 0, marginLeft: 'auto', fontSize: '1.1rem', maxWidth: '60%' }}>
+                        {title}
+                    </h2>
+                )}
+            </nav>
+        );
+
+        const Panel = ({ children }) => (
+            <article className="card" style={{ maxWidth: 900, margin: '1.25rem auto', padding: '1.25rem 1.5rem' }}>
+                {children}
+            </article>
+        );
+
+        const SectionTitle = ({ children }) => (
+            <h2 className="display" style={{ fontSize: '1.75rem', margin: '0 0 1rem', borderBottom: 'var(--border)', paddingBottom: '0.5rem' }}>
+                {children}
+            </h2>
+        );
+
+        const HomeScreen = ({ onNavigate }) => (
+            <main>
+                <Panel>
+                    <p style={{ fontSize: '1.1rem', marginTop: 0, fontWeight: 600 }}>
+                        Welcome! Whether you are curious about band or ready to sign up, you are in the right place.
+                        Tap a question below to learn more about Dean Beginning Band.
+                    </p>
+                </Panel>
+                <div
+                    style={{
+                        maxWidth: 900,
+                        margin: '0 auto 2rem',
+                        padding: '0 1rem',
+                        display: 'grid',
+                        gap: '0.75rem',
+                    }}
+                >
+                    {MENU.map((item) => (
+                        <button
+                            key={item.id}
+                            type="button"
+                            className="primary"
+                            style={{ width: '100%', justifyContent: 'flex-start', textAlign: 'left', fontSize: '1.05rem', padding: '1rem 1.25rem' }}
+                            onClick={() => onNavigate(item.id)}
+                        >
+                            {item.label}
+                        </button>
+                    ))}
+                </div>
+            </main>
+        );
+
+        const WhatIsBand = () => (
+            <Panel>
+                <SectionTitle>What is Band?</SectionTitle>
+                <p>
+                    In band class, students learn to play wind instruments (instruments you blow into) and percussion
+                    (instruments you hit). Unlike orchestra, band does not include string instruments like violin — and
+                    unlike a general music class, there are no pianos or guitars either.
+                </p>
+                <p>
+                    Band music has a rich history spanning many styles and cultures, including marching band, jazz, big
+                    band, mariachi, banda, and more.
+                </p>
+            </Panel>
+        );
+
+        const WhenMeet = () => (
+            <Panel>
+                <SectionTitle>When Does Band Meet?</SectionTitle>
+                <p>
+                    Band is a regular class, just like math, reading, language arts, science, and PE. It meets every
+                    school day during the regular school day — not after school, not as a club. Joining band doesn't mean
+                    giving anything up; it fits right into a normal schedule alongside everything else.
+                </p>
+                <p>
+                    In beginning band, after-school commitments are minimal — typically just one rehearsal before the
+                    big spring concert.
+                </p>
+            </Panel>
+        );
+
+        const InClass = () => (
+            <Panel>
+                <SectionTitle>What Will I Do in Class?</SectionTitle>
+                <p>
+                    In band class, students learn to read music, assemble and care for their instrument, play scales and
+                    fundamental exercises, and perform songs both on their own and as part of the group. Most importantly,
+                    they have a whole lot of fun.
+                </p>
+            </Panel>
+        );
+
+        const InstrumentCard = ({ instrument, onOpen }) => (
+            <button
+                type="button"
+                className="card comic-panel"
+                style={{
+                    padding: 0,
+                    textAlign: 'left',
+                    width: '100%',
+                    cursor: 'pointer',
+                    background: 'var(--white)',
+                }}
+                onClick={() => onOpen(instrument.id)}
+            >
+                <div style={{ position: 'relative', height: 140, background: 'var(--silver)', borderBottom: 'var(--border)' }}>
+                    {instrument.isCollage ? (
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', height: '100%' }}>
+                            {instrument.images.map((src, i) => (
+                                <img key={i} src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRight: i < 2 ? 'var(--border)' : 'none' }} />
+                            ))}
+                        </div>
+                    ) : (
+                        <img src={instrument.image} alt={instrument.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    )}
+                    <span className="halftone-overlay" />
+                </div>
+                <div style={{ padding: '0.75rem 1rem' }}>
+                    <p style={{ margin: 0, fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{instrument.family}</p>
+                    <h3 className="display" style={{ margin: '0.25rem 0 0', fontSize: '1.15rem' }}>{instrument.name}</h3>
+                </div>
+            </button>
+        );
+
+        const InstrumentBrowser = ({ onOpenInstrument }) => (
+            <main>
+                <Panel>
+                    <SectionTitle>What Instrument Will I Play?</SectionTitle>
+                    <p>
+                        Beginning band students choose from a family of wind and percussion instruments. Browse below to
+                        learn a little about each one.
+                    </p>
+                </Panel>
+                <div
+                    style={{
+                        maxWidth: 900,
+                        margin: '0 auto 2rem',
+                        padding: '0 1rem',
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+                        gap: '1rem',
+                    }}
+                >
+                    {INSTRUMENTS.map((inst) => (
+                        <InstrumentCard key={inst.id} instrument={inst} onOpen={onOpenInstrument} />
+                    ))}
+                </div>
+            </main>
+        );
+
+        const InstrumentDetail = ({ instrumentId, onNavigate }) => {
+            const inst = INSTRUMENTS.find((i) => i.id === instrumentId);
+            if (!inst) return null;
+
+            return (
+                <main>
+                    <Panel>
+                        <p style={{ margin: '0 0 0.5rem', fontWeight: 700, textTransform: 'uppercase', fontSize: '0.8rem' }}>{inst.family}</p>
+                        <SectionTitle>{inst.name}</SectionTitle>
+                        <div className="card comic-panel" style={{ marginBottom: '1.25rem', position: 'relative' }}>
+                            {inst.isCollage ? (
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', minHeight: 200 }}>
+                                    {inst.images.map((src, i) => (
+                                        <img key={i} src={src} alt="" style={{ width: '100%', height: 200, objectFit: 'cover', borderRight: i < 2 ? 'var(--border)' : 'none' }} />
+                                    ))}
+                                </div>
+                            ) : (
+                                <img src={inst.image} alt={inst.name} style={{ width: '100%', maxHeight: 280, objectFit: 'cover', display: 'block' }} />
+                            )}
+                            <span className="halftone-overlay" />
+                        </div>
+                        <p style={{ fontSize: '0.75rem', margin: '-0.75rem 0 1rem', color: '#444' }}>Photo: {inst.imageCredit}</p>
+                        <p>{inst.description}</p>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginTop: '1.25rem' }}>
+                            <a
+                                className="panel-btn primary"
+                                href={inst.youtube}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{ background: 'var(--blue)', color: 'var(--white)' }}
+                            >
+                                ▶ Watch someone play it
+                            </a>
+                        </div>
+                        <div className="benday" style={{ marginTop: '1.5rem', padding: '1rem', border: 'var(--border)' }}>
+                            <h3 className="display" style={{ fontSize: '1rem', margin: '0 0 0.5rem' }}>Recommended brands &amp; supplies</h3>
+                            <p style={{ margin: 0 }}>{inst.supplies}</p>
+                            <button type="button" style={{ marginTop: '0.75rem' }} onClick={() => onNavigate('supplies')}>
+                                See What Do I Need? →
+                            </button>
+                        </div>
+                    </Panel>
+                </main>
+            );
+        };
+
+        const ChooseInstrument = () => (
+            <Panel>
+                <SectionTitle>How Do I Choose My Instrument?</SectionTitle>
+                <p>
+                    Choosing an instrument isn't just about picking your favorite — it's about finding the one that fits
+                    you best so you can play it well and have the best possible band experience. During the instrument
+                    selection process, your band director will look at a few things:
+                </p>
+                <ul style={{ paddingLeft: '1.25rem' }}>
+                    <li><strong>Your embouchure</strong> — the shape of your lips and the way air flows between them</li>
+                    <li><strong>Your tooth alignment</strong> — how your top and bottom teeth line up</li>
+                    <li><strong>Your ear</strong> — your ability to recognize and match tones when you hear them</li>
+                    <li><strong>Your hands and fingers</strong> — how your fingers move, as well as factors like hand size and arm length</li>
+                </ul>
+                <p>
+                    No single factor makes or breaks anything — it's the whole picture together that helps point toward
+                    the right instrument. The goal is to set you up for success from day one.
+                </p>
+            </Panel>
+        );
+
+        const WhatDoINeed = ({ onNavigate }) => {
+            const goInstrument = (id) => onNavigate(`instrument:${id}`);
+
+            return (
+                <main>
+                    <Panel>
+                        <SectionTitle>What Do I Need?</SectionTitle>
+                        <h3 className="display" style={{ fontSize: '1.2rem' }}>Instruments provided by the school</h3>
+                        <p>
+                            Students who play oboe, bassoon, French horn, euphonium, or tuba will be issued an instrument at
+                            no cost — these instruments are large and expensive, and the school maintains a supply of them.
+                            These students will only need to obtain a small number of personal supplies, such as a mouthpiece
+                            or reeds. It's worth noting that these are also some of the more challenging instruments in band,
+                            so they may not be the right fit for everyone.
+                        </p>
+                    </Panel>
+
+                    <Panel>
+                        <h3 className="display" style={{ fontSize: '1.2rem', marginTop: 0 }}>Woodwind instruments</h3>
+                        <p style={{ fontStyle: 'italic', marginTop: 0 }}>(flute, clarinet, alto saxophone, oboe, bassoon)</p>
+                        <p>Woodwind players typically need:</p>
+                        <ul>
+                            <li>Reeds <em>(all woodwinds except flute)</em></li>
+                            <li>A swab for cleaning the inside of the instrument</li>
+                            <li>Additional supplies specific to each instrument</li>
+                        </ul>
+                        <p style={{ fontWeight: 600 }}>Instrument-specific recommendations:</p>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
+                            {['flute', 'clarinet', 'alto-sax', 'oboe', 'bassoon'].map((id) => {
+                                const inst = INSTRUMENTS.find((i) => i.id === id);
+                                return (
+                                    <button key={id} type="button" onClick={() => goInstrument(id)}>
+                                        {inst?.name}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </Panel>
+
+                    <Panel>
+                        <h3 className="display" style={{ fontSize: '1.2rem', marginTop: 0 }}>Brass instruments</h3>
+                        <p style={{ fontStyle: 'italic', marginTop: 0 }}>(trumpet, trombone, French horn, euphonium, tuba)</p>
+                        <p>Brass players typically need:</p>
+                        <ul>
+                            <li>Their instrument and mouthpiece</li>
+                            <li>Cleaning and maintenance supplies</li>
+                        </ul>
+                        <p style={{ fontWeight: 600 }}>Instrument-specific recommendations:</p>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
+                            {['trumpet', 'trombone', 'french-horn', 'euphonium', 'tuba'].map((id) => {
+                                const inst = INSTRUMENTS.find((i) => i.id === id);
+                                return (
+                                    <button key={id} type="button" onClick={() => goInstrument(id)}>
+                                        {inst?.name}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </Panel>
+
+                    <Panel>
+                        <h3 className="display" style={{ fontSize: '1.2rem', marginTop: 0 }}>Percussion</h3>
+                        <p>Percussion students typically need:</p>
+                        <ul>
+                            <li>A variety of sticks and mallets</li>
+                            <li>A bag to carry them in</li>
+                            <li>A practice pad for home practice</li>
+                            <li>A keyboard instrument (such as a small xylophone or bells) for home practice</li>
+                        </ul>
+                        <button type="button" onClick={() => goInstrument('percussion')}>Percussion supplies →</button>
+                    </Panel>
+                </main>
+            );
+        };
+
+        const GetInstrument = () => (
+            <main>
+                <Panel>
+                    <SectionTitle>How Do I Get My Instrument?</SectionTitle>
+                    <h3 className="display" style={{ fontSize: '1.2rem' }}>From a music store</h3>
+                    <p>
+                        We recommend renting or purchasing from a reputable music store. Two great options set up
+                        specifically for our school are:
+                    </p>
+                    <ul>
+                        <li>
+                            <a href={STORE_LINKS.hhMusic} target="_blank" rel="noopener noreferrer" style={{ fontWeight: 700, color: 'var(--blue-dark)' }}>
+                                H&amp;H Music
+                            </a>
+                            {' '}(school link coming soon)
+                        </li>
+                        <li>
+                            <a href={STORE_LINKS.musicAndArts} target="_blank" rel="noopener noreferrer" style={{ fontWeight: 700, color: 'var(--blue-dark)' }}>
+                                Music &amp; Arts
+                            </a>
+                            {' '}(school link coming soon)
+                        </li>
+                    </ul>
+                    <p>
+                        Renting is a popular choice for beginners — it lets students try the instrument before committing
+                        to a purchase, and many rental programs include maintenance and the option to apply payments
+                        toward buying later.
+                    </p>
+                </Panel>
+
+                <Panel>
+                    <h3 className="display" style={{ fontSize: '1.2rem', marginTop: 0 }}>Buying used</h3>
+                    <p>
+                        A used instrument from a reputable brand in good condition can actually be a better choice than
+                        buying a cheap new one. Sites like Facebook Marketplace can be a good place to look — just make
+                        sure to search for the right brands and models. (Each instrument's page in &ldquo;What Instrument Will I
+                        Play?&rdquo; has brand recommendations.)
+                    </p>
+                </Panel>
+
+                <Panel>
+                    <h3 className="display" style={{ fontSize: '1.2rem', marginTop: 0 }}>A word of caution about inexpensive instruments online</h3>
+                    <p>
+                        Bargain instruments sold on Amazon or similar sites may seem appealing, but repair technicians
+                        frequently report that these instruments are difficult or impossible to service — replacement parts
+                        often don't exist, and the instruments can actually break further in the process of being repaired.
+                        Please keep that in mind when shopping.
+                    </p>
+                </Panel>
+
+                <Panel>
+                    <h3 className="display" style={{ fontSize: '1.2rem', marginTop: 0 }}>That all sounds expensive...</h3>
+                    <p>
+                        We understand that cost is a real concern for many families. We are committed to making sure every
+                        student who wants to play has a chance to do so, and we will do everything we can to help find a
+                        solution for each student. That said, our school-owned instruments are very limited in number, so we
+                        ask that any family who is able to obtain their own instrument please do so, allowing our limited
+                        resources to go to those who truly need them.
+                    </p>
+                </Panel>
+            </main>
+        );
+
+        const Contact = () => (
+            <Panel>
+                <SectionTitle>Contact Us</SectionTitle>
+                <p>Have questions? We're happy to help.</p>
+                <p>
+                    <strong>Students</strong> — the best way to reach us is through a Schoology message.
+                </p>
+                <p>
+                    <strong>Parents</strong> — feel free to email us directly at the addresses below.
+                </p>
+                <div style={{ display: 'grid', gap: '1rem', marginTop: '1.5rem' }}>
+                    {CONTACTS.map((c) => (
+                        <div key={c.email} className="card benday" style={{ padding: '1rem' }}>
+                            <h3 className="display" style={{ margin: 0, fontSize: '1.1rem' }}>{c.name}</h3>
+                            {c.role && <p style={{ margin: '0.25rem 0', fontWeight: 600 }}>{c.role}</p>}
+                            <a href={`mailto:${c.email}`} style={{ fontWeight: 700, color: 'var(--blue-dark)' }}>{c.email}</a>
+                        </div>
+                    ))}
+                </div>
+            </Panel>
+        );
+
+        const VIEW_TITLES = {
+            'what-is-band': 'What is Band?',
+            'when-meet': 'When Does Band Meet?',
+            'in-class': 'What Will I Do in Class?',
+            instruments: 'What Instrument Will I Play?',
+            choose: 'How Do I Choose My Instrument?',
+            supplies: 'What Do I Need?',
+            'get-instrument': 'How Do I Get My Instrument?',
+            contact: 'Contact Us',
+        };
+
+        function App() {
+            const [view, setView] = useState('home');
+            const [history, setHistory] = useState([]);
+
+            const navigate = (next) => {
+                setHistory((h) => [...h, view]);
+                setView(next);
+                window.scrollTo(0, 0);
+            };
+
+            const goBack = () => {
+                setHistory((h) => {
+                    const copy = [...h];
+                    const prev = copy.pop() || 'home';
+                    setView(prev);
+                    return copy;
+                });
+                window.scrollTo(0, 0);
+            };
+
+            const goHome = () => {
+                setView('home');
+                setHistory([]);
+                window.scrollTo(0, 0);
+            };
+
+            const isInstrument = view.startsWith('instrument:');
+            const instrumentId = isInstrument ? view.split(':')[1] : null;
+            const showNav = view !== 'home';
+            const title = isInstrument
+                ? INSTRUMENTS.find((i) => i.id === instrumentId)?.name
+                : VIEW_TITLES[view];
+
+            let content;
+            if (view === 'home') content = <HomeScreen onNavigate={navigate} />;
+            else if (view === 'what-is-band') content = <WhatIsBand />;
+            else if (view === 'when-meet') content = <WhenMeet />;
+            else if (view === 'in-class') content = <InClass />;
+            else if (view === 'instruments') content = <InstrumentBrowser onOpenInstrument={(id) => navigate(`instrument:${id}`)} />;
+            else if (isInstrument) content = <InstrumentDetail instrumentId={instrumentId} onNavigate={navigate} />;
+            else if (view === 'choose') content = <ChooseInstrument />;
+            else if (view === 'supplies') content = <WhatDoINeed onNavigate={navigate} />;
+            else if (view === 'get-instrument') content = <GetInstrument />;
+            else if (view === 'contact') content = <Contact />;
+
+            return (
+                <div>
+                    <Header />
+                    {showNav && <NavBar onBack={history.length ? goBack : null} onHome={goHome} title={title} />}
+                    {content}
+                    <footer className="benday-blue" style={{ marginTop: '2rem', borderTop: 'var(--border)', color: 'var(--white)', textAlign: 'center', padding: '1.25rem' }}>
+                        <MustangMark size={40} />
+                        <p style={{ margin: '0.5rem 0 0', fontWeight: 700, fontSize: '0.85rem' }}>Dean Middle School Beginning Band</p>
+                    </footer>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+
+</html>

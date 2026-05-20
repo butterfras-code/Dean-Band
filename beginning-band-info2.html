@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dean Mustangs Band — Find Your Sound</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #1d4ed8;
+    --blue-dark: #1e3a8a;
+    --blue-light: #dbeafe;
+    --black: #000000;
+    --white: #ffffff;
+    --silver: #e5e7eb;
+    --silver-dark: #9ca3af;
+    --yellow: #fbbf24;
+    --red: #dc2626;
+    --border: 4px solid var(--black);
+    --border-thick: 6px solid var(--black);
+    --shadow: 8px 8px 0 var(--black);
+    --shadow-sm: 4px 4px 0 var(--black);
+    --shadow-lg: 12px 12px 0 var(--black);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html, body {
+    overflow-x: hidden;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--black);
+    line-height: 1.5;
+    background-image:
+      radial-gradient(circle, var(--black) 1.2px, transparent 1.2px);
+    background-size: 16px 16px;
+    background-position: 0 0;
+    min-height: 100vh;
+  }
+
+  /* ============ STICKY HEADER ============ */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--blue);
+    border-bottom: var(--border-thick);
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: inherit;
+    font: inherit;
+    padding: 0;
+  }
+
+  .brand-mark {
+    width: 44px;
+    height: 44px;
+    background: var(--white);
+    border: 3px solid var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .brand-mark svg {
+    width: 32px;
+    height: 32px;
+    fill: var(--black);
+  }
+
+  .brand-text {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 18px;
+    color: var(--white);
+    line-height: 1;
+    letter-spacing: 0.5px;
+    text-align: left;
+  }
+
+  .brand-text .small {
+    display: block;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    margin-top: 4px;
+    color: var(--yellow);
+    letter-spacing: 1px;
+  }
+
+  .lang-toggle {
+    display: flex;
+    border: 3px solid var(--black);
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+    flex-shrink: 0;
+  }
+
+  .lang-btn {
+    background: var(--white);
+    border: none;
+    padding: 8px 12px;
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    color: var(--black);
+    letter-spacing: 1px;
+    transition: background 0.1s;
+  }
+
+  .lang-btn:not(:last-child) {
+    border-right: 3px solid var(--black);
+  }
+
+  .lang-btn.active {
+    background: var(--yellow);
+  }
+
+  .lang-btn:hover:not(.active) {
+    background: var(--blue-light);
+  }
+
+  /* ============ MAIN LAYOUT ============ */
+  main {
+    padding: 24px 20px 80px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .view {
+    display: none;
+  }
+
+  .view.active {
+    display: block;
+    animation: snap-in 0.2s steps(2);
+  }
+
+  @keyframes snap-in {
+    from { transform: translateY(8px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  /* ============ HERO ============ */
+  .hero {
+    background: var(--yellow);
+    border: var(--border-thick);
+    box-shadow: var(--shadow);
+    padding: 32px 24px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 160px;
+    height: 160px;
+    background-image: radial-gradient(circle, var(--black) 2px, transparent 2px);
+    background-size: 12px 12px;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .hero h1 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(36px, 9vw, 64px);
+    line-height: 0.95;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    letter-spacing: -1px;
+    position: relative;
+  }
+
+  .hero p {
+    font-size: 16px;
+    font-weight: 500;
+    max-width: 600px;
+    position: relative;
+  }
+
+  /* ============ MENU GRID ============ */
+  .menu-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  @media (min-width: 600px) {
+    .menu-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .menu-card {
+    background: var(--white);
+    border: var(--border);
+    box-shadow: var(--shadow-sm);
+    padding: 24px 20px;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s;
+    text-align: left;
+    font-family: inherit;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 90px;
+  }
+
+  .menu-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--black);
+  }
+
+  .menu-card:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--black);
+  }
+
+  .menu-card-num {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 32px;
+    color: var(--blue);
+    line-height: 1;
+    background: var(--black);
+    color: var(--yellow);
+    padding: 8px 12px;
+    flex-shrink: 0;
+    min-width: 56px;
+    text-align: center;
+  }
+
+  .menu-card-text {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 18px;
+    text-transform: uppercase;
+    line-height: 1.1;
+    letter-spacing: 0.5px;
+  }
+
+  .menu-card:nth-child(odd) .menu-card-num {
+    background: var(--blue);
+    color: var(--white);
+  }
+
+  .menu-card:nth-child(3n) .menu-card-num {
+    background: var(--red);
+    color: var(--white);
+  }
+
+  /* ============ SECTION VIEWS ============ */
+  .back-btn {
+    background: var(--black);
+    color: var(--white);
+    border: 3px solid var(--black);
+    padding: 10px 16px;
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    margin-bottom: 24px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+
+  .back-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--blue);
+  }
+
+  .back-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--blue);
+  }
+
+  .section-title {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(32px, 7vw, 52px);
+    line-height: 0.95;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    letter-spacing: -1px;
+    padding: 16px 20px;
+    background: var(--blue);
+    color: var(--white);
+    border: var(--border-thick);
+    box-shadow: var(--shadow);
+    display: inline-block;
+    max-width: 100%;
+  }
+
+  .content-block {
+    background: var(--white);
+    border: var(--border);
+    box-shadow: var(--shadow-sm);
+    padding: 24px;
+    margin-bottom: 20px;
+    font-size: 16px;
+  }
+
+  .content-block h3 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 22px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    color: var(--blue-dark);
+    letter-spacing: 0.5px;
+  }
+
+  .content-block p {
+    margin-bottom: 12px;
+  }
+
+  .content-block p:last-child {
+    margin-bottom: 0;
+  }
+
+  .content-block ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .content-block ul li {
+    padding: 10px 0 10px 32px;
+    position: relative;
+    border-bottom: 2px solid var(--silver);
+  }
+
+  .content-block ul li:last-child {
+    border-bottom: none;
+  }
+
+  .content-block ul li::before {
+    content: '■';
+    position: absolute;
+    left: 8px;
+    top: 10px;
+    color: var(--blue);
+    font-size: 14px;
+  }
+
+  .content-block ul li strong {
+    font-family: 'Archivo Black', sans-serif;
+    color: var(--black);
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .callout {
+    background: var(--yellow);
+    border: var(--border);
+    box-shadow: var(--shadow-sm);
+    padding: 20px 24px;
+    margin: 20px 0;
+    font-weight: 500;
+  }
+
+  .callout strong {
+    font-family: 'Archivo Black', sans-serif;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+
+  .callout.warning {
+    background: var(--red);
+    color: var(--white);
+  }
+
+  /* ============ INSTRUMENT BROWSER ============ */
+  .instrument-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  @media (min-width: 640px) {
+    .instrument-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (min-width: 900px) {
+    .instrument-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .instrument-card {
+    background: var(--white);
+    border: var(--border);
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s;
+    font-family: inherit;
+    text-align: left;
+    padding: 0;
+    overflow: hidden;
+    color: inherit;
+  }
+
+  .instrument-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--blue);
+  }
+
+  .instrument-thumb {
+    aspect-ratio: 1;
+    background: var(--blue-light);
+    border-bottom: 3px solid var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .thumb-blur {
+    position: absolute;
+    inset: -12%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(28px) saturate(1.1);
+    transform: scale(1.08);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .thumb-blur::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(232, 240, 254, 0.4);
+  }
+
+  .instrument-thumb .thumb-photo,
+  .modal-thumb .thumb-photo {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    padding: 12px;
+    box-sizing: border-box;
+  }
+
+  .thumb-split {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+  }
+
+  .thumb-split-pane {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    min-width: 0;
+    height: 100%;
+  }
+
+  .thumb-split-pane + .thumb-split-pane {
+    border-left: 2px solid var(--black);
+  }
+
+  .thumb-split-pane .thumb-photo {
+    padding: 8px;
+  }
+
+  .instrument-svg {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    padding: 12%;
+  }
+
+  .instrument-svg svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .modal-svg {
+    width: 80%;
+    max-width: 280px;
+    height: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .modal-svg svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .instrument-thumb-text {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 14px;
+    text-transform: uppercase;
+    color: var(--blue-dark);
+    text-align: center;
+    padding: 8px;
+    position: relative;
+    z-index: 1;
+    letter-spacing: 1px;
+  }
+
+  .instrument-card-body {
+    padding: 12px;
+    background: var(--white);
+  }
+
+  .instrument-name {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 14px;
+    text-transform: uppercase;
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+
+  .instrument-family {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--silver-dark);
+    letter-spacing: 1px;
+  }
+
+  /* ============ INSTRUMENT DETAIL MODAL ============ */
+  .modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 200;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 20px;
+    overflow-y: auto;
+  }
+
+  .modal-backdrop.active {
+    display: flex;
+  }
+
+  .modal {
+    background: var(--white);
+    border: var(--border-thick);
+    box-shadow: var(--shadow-lg);
+    max-width: 500px;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 40px;
+  }
+
+  .modal-thumb {
+    aspect-ratio: 16/10;
+    background: var(--blue-light);
+    border-bottom: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .modal-thumb .thumb-photo {
+    padding: 16px;
+  }
+
+  .modal-thumb-text {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 28px;
+    text-transform: uppercase;
+    color: var(--blue-dark);
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 16px;
+  }
+
+  .modal-body {
+    padding: 24px;
+  }
+
+  .modal-name {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 28px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    letter-spacing: -0.5px;
+  }
+
+  .modal-family {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--silver-dark);
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+
+  .modal-desc {
+    margin-bottom: 20px;
+    font-size: 15px;
+  }
+
+  .modal-watch {
+    display: inline-block;
+    background: var(--red);
+    color: var(--white);
+    border: 3px solid var(--black);
+    padding: 12px 20px;
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 14px;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 1px;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.1s, box-shadow 0.1s;
+    cursor: pointer;
+  }
+
+  .modal-watch:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--black);
+  }
+
+  .modal-close {
+    background: var(--black);
+    color: var(--white);
+    border: none;
+    padding: 8px 16px;
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 16px;
+    width: 100%;
+  }
+
+  /* ============ CONTACT ============ */
+  .contact-card {
+    background: var(--white);
+    border: var(--border);
+    box-shadow: var(--shadow-sm);
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .contact-card.head {
+    background: var(--blue);
+    color: var(--white);
+  }
+
+  .contact-initials {
+    width: 56px;
+    height: 56px;
+    background: var(--yellow);
+    border: 3px solid var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 22px;
+    flex-shrink: 0;
+    color: var(--black);
+  }
+
+  .contact-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .contact-name {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 18px;
+    text-transform: uppercase;
+    line-height: 1.2;
+    letter-spacing: 0.5px;
+  }
+
+  .contact-role {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+    opacity: 0.8;
+  }
+
+  .contact-email {
+    display: block;
+    font-size: 14px;
+    color: inherit;
+    text-decoration: underline;
+    margin-top: 6px;
+    word-break: break-all;
+  }
+
+  /* ============ FOOTER MUSTANG ============ */
+  .mustang-footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+  }
+
+  .mustang-footer svg {
+    width: 80px;
+    height: 80px;
+    fill: var(--black);
+    opacity: 0.6;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ STICKY HEADER ============ -->
+<header>
+  <button class="brand" onclick="showView('home')" aria-label="Home">
+    <span class="brand-mark">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <!-- Bold mustang head silhouette -->
+        <path d="M20 75 Q15 60 22 50 Q18 42 24 35 Q22 25 32 22 Q35 12 48 15 Q55 8 65 18 Q75 22 78 35 Q85 42 80 52 L85 58 L82 65 L78 62 L75 70 L70 68 L68 78 L60 75 L55 82 L48 78 L40 82 L35 75 L28 80 Z M55 35 Q58 32 62 35" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
+        <circle cx="58" cy="42" r="2.5" fill="#fff"/>
+      </svg>
+    </span>
+    <span class="brand-text">
+      DEAN BAND
+      <span class="small">★ MUSTANGS ★</span>
+    </span>
+  </button>
+  <div class="lang-toggle" role="group" aria-label="Language">
+    <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" data-lang="es" onclick="setLang('es')">ES</button>
+    <!-- Stretch goal: Southern Vietnamese -->
+    <!-- <button class="lang-btn" data-lang="vi" onclick="setLang('vi')">VI</button> -->
+  </div>
+</header>
+
+<main>
+
+<!-- ============ HOME VIEW ============ -->
+<section id="view-home" class="view active">
+  <div class="hero">
+    <h1 data-i18n="hero.title">Find Your Sound.</h1>
+    <p data-i18n="hero.subtitle">Everything you need to know about joining beginning band at Dean Middle School. Tap a question to get started.</p>
+  </div>
+  <div class="menu-grid" id="menu-grid"></div>
+</section>
+
+<!-- ============ WHAT IS BAND ============ -->
+<section id="view-what-is-band" class="view">
+  <button class="back-btn" onclick="showView('home')">← <span data-i18n="back">Back to Menu</span></button>
+  <h2 class="section-title" data-i18n="q1.title">What is Band?</h2>
+  <div class="content-block">
+    <p data-i18n="q1.p1">In band class, students learn to play <strong>wind instruments</strong> (instruments you blow into) and <strong>percussion</strong> (instruments you hit). Unlike orchestra, band does not include string instruments like violin — and unlike a general music class, there are no pianos or guitars either. Band is its own thing.</p>
+    <p data-i18n="q1.p2">Band music has a rich history spanning many styles and cultures, including marching band, jazz, big band, mariachi, banda, and more.</p>
+  </div>
+</section>
+
+<!-- ============ WHEN DOES BAND MEET ============ -->
+<section id="view-when" class="view">
+  <button class="back-btn" onclick="showView('home')">← <span data-i18n="back">Back to Menu</span></button>
+  <h2 class="section-title" data-i18n="q2.title">When Does Band Meet?</h2>
+  <div class="content-block">
+    <p data-i18n="q2.p1">Band is a <strong>regular class</strong>, just like math, reading, language arts, science, and PE. It meets every school day during the regular school day — not after school, not as a club.</p>
+    <p data-i18n="q2.p2">Joining band doesn't mean giving anything up; it fits right into a normal schedule alongside everything else.</p>
+  </div>
+  <div class="callout">
+    <strong data-i18n="q2.callout.title">After-School Time</strong>
+    <span data-i18n="q2.callout.body">In beginning band, after-school commitments are minimal — typically just one rehearsal before the big spring concert.</span>
+  </div>
+</section>
+
+<!-- ============ WHAT WILL I DO ============ -->
+<section id="view-what-will-i-do" class="view">
+  <button class="back-btn" onclick="showView('home')">← <span data-i18n="back">Back to Menu</span></button>
+  <h2 class="section-title" data-i18n="q3.title">What Will I Do in Class?</h2>
+  <div class="content-block">
+    <p data-i18n="q3.p1">In band class, students learn to:</p>
+    <ul>
+      <li data-i18n="q3.li1">Read music</li>
+      <li data-i18n="q3.li2">Assemble and care for their instrument</li>
+      <li data-i18n="q3.li3">Play scales and fundamental exercises</li>
+      <li data-i18n="q3.li4">Perform songs alone and as part of the group</li>
+    </ul>
+  </div>
+  <div class="callout">
+    <strong data-i18n="q3.callout.title">Most Importantly...</strong>
+    <span data-i18n="q3.callout.body">...students have a whole lot of fun.</span>
+  </div>
+</section>
+
+<!-- ============ WHAT INSTRUMENT WILL I PLAY (BROWSER) ============ -->
+<section id="view-instruments" class="view">
+  <button class="back-btn" onclick="showView('home')">← <span data-i18n="back">Back to Menu</span></button>
+  <h2 class="section-title" data-i18n="q4.title">What Will I Play?</h2>
+  <div class="content-block">
+    <p data-i18n="q4.intro">Beginning band students choose from a family of wind and percussion instruments. Tap any instrument below to learn more.</p>
+  </div>
+  <div class="instrument-grid" id="instrument-grid"></div>
+</section>
+
+<!-- ============ HOW DO I CHOOSE ============ -->
+<section id="view-choose" class="view">
+  <button class="back-btn" onclick="showView('home')">← <span data-i18n="back">Back to Menu</span></button>
+  <h2 class="section-title" data-i18n="q5.title">How Do I Choose?</h2>
+  <div class="content-block">
+    <p data-i18n="q5.p1">Choosing an instrument isn't just about picking your favorite — it's about finding the one that fits <em>you</em> best so you can play it well and have the best possible band experience.</p>
+    <p data-i18n="q5.p2">During the instrument selection process, your band director will look at a few things:</p>
+    <ul>
+      <li>
+        <strong data-i18n="q5.li1.t">Your Embouchure</strong>
+        <span data-i18n="q5.li1.d">The shape of your lips and the way air flows between them.</span>
+      </li>
+      <li>
+        <strong data-i18n="q5.li2.t">Your Tooth Alignment</strong>
+        <span data-i18n="q5.li2.d">How your top and bottom teeth line up.</span>
+      </li>
+      <li>
+        <strong data-i18n="q5.li3.t">Your Ear</strong>
+        <span data-i18n="q5.li3.d">Your ability to recognize and match tones when you hear them.</span>
+      </li>
+      <li>
+        <strong data-i18n="q5.li4.t">Your Hands &amp; Fingers</strong>
+        <span data-i18n="q5.li4.d">How your fingers move, as well as factors like hand size and arm length.</span>
+      </li>
+    </ul>
+  </div>
+  <div class="callout">
+    <strong data-i18n="q5.callout.title">The Goal</strong>
+    <span data-i18n="q5.callout.body">No single factor makes or breaks anything — it's the whole picture together that helps point toward the right instrument. The goal is to set you up for success from day one.</span>
+  </div>
+</section>
+
+<!-- ============ WHAT DO I NEED ============ -->
+<section id="view-need" class="view">
+  <button class="back-btn" onclick="showView('home')">← <span data-i18n="back">Back to Menu</span></button>
+  <h2 class="section-title" data-i18n="q6.title">What Do I Need?</h2>
+
+  <div class="content-block">
+    <h3 data-i18n="q6.school.t">School-Provided Instruments</h3>
+    <p data-i18n="q6.school.p1">Students who play <strong>oboe, bassoon, French horn, euphonium, or tuba</strong> will be issued an instrument at no cost — these instruments are large and expensive, and the school maintains a supply of them. These students only need a few personal supplies, such as a mouthpiece or reeds.</p>
+    <p data-i18n="q6.school.p2">It's worth noting that these are also some of the more challenging instruments in band, so they may not be the right fit for everyone.</p>
+  </div>
+
+  <div class="content-block">
+    <h3 data-i18n="q6.wood.t">Woodwind Instruments</h3>
+    <p><em data-i18n="q6.wood.list">flute, clarinet, alto saxophone, oboe, bassoon</em></p>
+    <p data-i18n="q6.wood.p">Woodwind players typically need:</p>
+    <ul>
+      <li data-i18n="q6.wood.li1">Reeds (all woodwinds except flute)</li>
+      <li data-i18n="q6.wood.li2">A swab for cleaning the inside of the instrument</li>
+      <li data-i18n="q6.wood.li3">Additional supplies specific to each instrument</li>
+    </ul>
+  </div>
+
+  <div class="content-block">
+    <h3 data-i18n="q6.brass.t">Brass Instruments</h3>
+    <p><em data-i18n="q6.brass.list">trumpet, trombone, French horn, euphonium, tuba</em></p>
+    <p data-i18n="q6.brass.p">Brass players typically need:</p>
+    <ul>
+      <li data-i18n="q6.brass.li1">Their instrument and mouthpiece</li>
+      <li data-i18n="q6.brass.li2">Cleaning and maintenance supplies</li>
+    </ul>
+  </div>
+
+  <div class="content-block">
+    <h3 data-i18n="q6.perc.t">Percussion</h3>
+    <p data-i18n="q6.perc.p">Percussion students typically need:</p>
+    <ul>
+      <li data-i18n="q6.perc.li1">A variety of sticks and mallets</li>
+      <li data-i18n="q6.perc.li2">A bag to carry them in</li>
+      <li data-i18n="q6.perc.li3">A practice pad for home practice</li>
+      <li data-i18n="q6.perc.li4">A keyboard instrument (such as a small xylophone or bells) for home practice</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ HOW DO I GET IT ============ -->
+<section id="view-get" class="view">
+  <button class="back-btn" onclick="showView('home')">← <span data-i18n="back">Back to Menu</span></button>
+  <h2 class="section-title" data-i18n="q7.title">How Do I Get It?</h2>
+
+  <div class="content-block">
+    <h3 data-i18n="q7.store.t">From a Music Store</h3>
+    <p data-i18n="q7.store.p1">We recommend renting or purchasing from a reputable music store. Two great options set up specifically for our school are:</p>
+    <ul>
+      <li><strong>H&amp;H Music</strong> — <a href="#" data-i18n="q7.store.link">[your link here]</a></li>
+      <li><strong>Music &amp; Arts</strong> — <a href="#" data-i18n="q7.store.link">[your link here]</a></li>
+    </ul>
+    <p data-i18n="q7.store.p2">Renting is a popular choice for beginners — it lets students try the instrument before committing to a purchase, and many rental programs include maintenance and the option to apply payments toward buying later.</p>
+  </div>
+
+  <div class="content-block">
+    <h3 data-i18n="q7.used.t">Buying Used</h3>
+    <p data-i18n="q7.used.p">A used instrument from a reputable brand in good condition can actually be a better choice than buying a cheap new one. Sites like Facebook Marketplace can be a good place to look — just make sure to search for the right brands and models. Each instrument's page has brand recommendations.</p>
+  </div>
+
+  <div class="callout warning">
+    <strong data-i18n="q7.warn.t">⚠ A Word of Caution</strong>
+    <span data-i18n="q7.warn.b">Bargain instruments sold on Amazon or similar sites may seem appealing, but repair technicians frequently report that these instruments are difficult or impossible to service — replacement parts often don't exist, and the instruments can actually break further in the process of being repaired. Please keep that in mind when shopping.</span>
+  </div>
+
+  <div class="content-block">
+    <h3 data-i18n="q7.cost.t">That All Sounds Expensive...</h3>
+    <p data-i18n="q7.cost.p">We understand that cost is a real concern for many families. We are committed to making sure every student who wants to play has a chance to do so, and we will do everything we can to help find a solution for each student. That said, our school-owned instruments are very limited in number, so we ask that any family who is able to obtain their own instrument please do so, allowing our limited resources to go to those who truly need them.</p>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section id="view-contact" class="view">
+  <button class="back-btn" onclick="showView('home')">← <span data-i18n="back">Back to Menu</span></button>
+  <h2 class="section-title" data-i18n="q8.title">Contact Us</h2>
+  <div class="content-block">
+    <p data-i18n="q8.intro">Have questions? We're happy to help.</p>
+    <p data-i18n="q8.students"><strong>Students</strong> — the best way to reach us is through a Schoology message.</p>
+    <p data-i18n="q8.parents"><strong>Parents</strong> — feel free to email us directly at the addresses below.</p>
+  </div>
+
+  <div class="contact-card head">
+    <div class="contact-initials">PH</div>
+    <div class="contact-info">
+      <div class="contact-name">Paul Hogue</div>
+      <div class="contact-role" data-i18n="q8.head">Head Band Director</div>
+      <a class="contact-email" href="mailto:paul.hogue@cfisd.net">paul.hogue@cfisd.net</a>
+    </div>
+  </div>
+
+  <div class="contact-card">
+    <div class="contact-initials">JB</div>
+    <div class="contact-info">
+      <div class="contact-name">Justin Butterfras</div>
+      <div class="contact-role" data-i18n="q8.director">Band Director</div>
+      <a class="contact-email" href="mailto:william.butterfras@cfisd.net">william.butterfras@cfisd.net</a>
+    </div>
+  </div>
+
+  <div class="contact-card">
+    <div class="contact-initials">AV</div>
+    <div class="contact-info">
+      <div class="contact-name">Andrew Vanegas</div>
+      <div class="contact-role" data-i18n="q8.director">Band Director</div>
+      <a class="contact-email" href="mailto:andrew.vanegas@cfisd.net">andrew.vanegas@cfisd.net</a>
+    </div>
+  </div>
+</section>
+
+<div class="mustang-footer">
+  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20 75 Q15 60 22 50 Q18 42 24 35 Q22 25 32 22 Q35 12 48 15 Q55 8 65 18 Q75 22 78 35 Q85 42 80 52 L85 58 L82 65 L78 62 L75 70 L70 68 L68 78 L60 75 L55 82 L48 78 L40 82 L35 75 L28 80 Z" stroke="#000" stroke-width="2" stroke-linejoin="round"/>
+  </svg>
+</div>
+
+</main>
+
+<!-- ============ INSTRUMENT MODAL ============ -->
+<div class="modal-backdrop" id="modal-backdrop" onclick="closeModalIfBackdrop(event)">
+  <div class="modal" id="modal">
+    <div class="modal-thumb" id="modal-thumb"></div>
+    <div class="modal-body">
+      <div class="modal-name" id="modal-name"></div>
+      <div class="modal-family" id="modal-family"></div>
+      <p class="modal-desc" id="modal-desc"></p>
+      <a class="modal-watch" id="modal-watch" target="_blank" rel="noopener">▶ <span data-i18n="watch">Watch Someone Play It</span></a>
+      <button class="modal-close" onclick="closeModal()" data-i18n="close">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DEAN MIDDLE SCHOOL BAND APP
+   ============================================================
+   CUSTOMIZATION GUIDE:
+
+   1. INSTRUMENT IMAGES
+      Each instrument uses a Wikimedia Commons photo in the `img`
+      field of the INSTRUMENTS array below. Replace a URL to use
+      a different photo.
+      Example URL format:
+      https://commons.wikimedia.org/wiki/Special:FilePath/Filename.jpg
+
+   2. YOUTUBE LINKS
+      Add a YouTube URL in the `youtube` field of each instrument
+      in the INSTRUMENTS array. The "Watch Someone Play It"
+      button only appears when a link is present.
+
+   3. MUSIC STORE LINKS
+      Search for "[your link here]" in the HTML body and replace
+      the href attributes on the H&H Music and Music & Arts
+      list items.
+
+   4. TRANSLATIONS
+      All user-facing text lives in the I18N object below.
+      To add a new language (e.g., Vietnamese), add a new top-
+      level key like `vi: { ... }` with all the same string keys.
+      Then uncomment the matching <button> in the language toggle
+      at the top of the page.
+
+   NOTE ON SPANISH TRANSLATIONS:
+   The Spanish translations are a solid starting point but
+   should be reviewed by a fluent Spanish speaker (preferably
+   one familiar with band/music terminology) before going live.
+============================================================ */
+
+const MENU_ITEMS = [
+  { id: 'what-is-band',    key: 'menu.q1', view: 'view-what-is-band' },
+  { id: 'when',            key: 'menu.q2', view: 'view-when' },
+  { id: 'what-will-i-do',  key: 'menu.q3', view: 'view-what-will-i-do' },
+  { id: 'instruments',     key: 'menu.q4', view: 'view-instruments' },
+  { id: 'choose',          key: 'menu.q5', view: 'view-choose' },
+  { id: 'need',            key: 'menu.q6', view: 'view-need' },
+  { id: 'get',             key: 'menu.q7', view: 'view-get' },
+  { id: 'contact',         key: 'menu.q8', view: 'view-contact' }
+];
+
+const INSTRUMENTS = [
+  { id: 'flute',      family: 'woodwind',   img: 'https://upload.wikimedia.org/wikipedia/commons/b/bf/Western_Concert_Flute.jpg', youtube: '' },
+  { id: 'oboe',       family: 'woodwind',   img: 'https://upload.wikimedia.org/wikipedia/commons/e/e2/M%C3%B6nnig%2C_Oboe_Modell_155_Albrecht_Mayer.jpg', youtube: '' },
+  { id: 'bassoon',    family: 'woodwind',   img: 'https://upload.wikimedia.org/wikipedia/commons/6/6f/FoxBassoon.png', youtube: '' },
+  { id: 'clarinet',   family: 'woodwind',   img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Clarinet_%2851371523307%29.jpg/960px-Clarinet_%2851371523307%29.jpg', youtube: '' },
+  { id: 'sax',        family: 'woodwind',   img: 'https://upload.wikimedia.org/wikipedia/commons/e/e0/Saksofon_altowy_Serie_III_GP_firmy_Selmer.jpg', youtube: '' },
+  { id: 'trumpet',    family: 'brass',      img: 'https://upload.wikimedia.org/wikipedia/commons/1/12/Yamaha_Trumpet_YTR-8335LA_crop.jpg', youtube: '' },
+  { id: 'frenchhorn', family: 'brass',      img: 'https://upload.wikimedia.org/wikipedia/commons/6/63/French_horn_front.png', youtube: '' },
+  { id: 'trombone',   family: 'brass',      img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Tenor_slide_trombone_3D_model.jpg/960px-Tenor_slide_trombone_3D_model.jpg', youtube: '' },
+  { id: 'euphonium',  family: 'brass',      img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Yamaha_Euphonium_YEP-621.tif/lossy-page1-960px-Yamaha_Euphonium_YEP-621.tif.jpg', youtube: '' },
+  { id: 'tuba',       family: 'brass',      img: 'https://upload.wikimedia.org/wikipedia/commons/1/11/Tuba_Melton_Meinl_Weston.png', youtube: '' },
+  {
+    id: 'percussion',
+    family: 'percussion',
+    img: '',
+    images: [
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Drumhead_Coated_on_Snare_Drum.png/960px-Drumhead_Coated_on_Snare_Drum.png',
+      'https://upload.wikimedia.org/wikipedia/commons/1/1d/Xylophone_%28PSF%29.svg'
+    ],
+    youtube: ''
+  }
+];
+
+const I18N = {
+  en: {
+    'back': 'Back to Menu',
+    'watch': 'Watch Someone Play It',
+    'close': 'Close',
+    'hero.title': 'Find Your Sound.',
+    'hero.subtitle': 'Everything you need to know about joining beginning band at Dean Middle School. Tap a question to get started.',
+
+    'menu.q1': 'What is Band?',
+    'menu.q2': 'When Does Band Meet?',
+    'menu.q3': 'What Will I Do in Class?',
+    'menu.q4': 'What Will I Play?',
+    'menu.q5': 'How Do I Choose?',
+    'menu.q6': 'What Do I Need?',
+    'menu.q7': 'How Do I Get It?',
+    'menu.q8': 'Contact Us',
+
+    'q1.title': 'What is Band?',
+    'q1.p1': 'In band class, students learn to play <strong>wind instruments</strong> (instruments you blow into) and <strong>percussion</strong> (instruments you hit). Unlike orchestra, band does not include string instruments like violin — and unlike a general music class, there are no pianos or guitars either. Band is its own thing.',
+    'q1.p2': 'Band music has a rich history spanning many styles and cultures, including marching band, jazz, big band, mariachi, banda, and more.',
+
+    'q2.title': 'When Does Band Meet?',
+    'q2.p1': 'Band is a <strong>regular class</strong>, just like math, reading, language arts, science, and PE. It meets every school day during the regular school day — not after school, not as a club.',
+    'q2.p2': "Joining band doesn't mean giving anything up; it fits right into a normal schedule alongside everything else.",
+    'q2.callout.title': 'After-School Time',
+    'q2.callout.body': 'In beginning band, after-school commitments are minimal — typically just one rehearsal before the big spring concert.',
+
+    'q3.title': 'What Will I Do in Class?',
+    'q3.p1': 'In band class, students learn to:',
+    'q3.li1': 'Read music',
+    'q3.li2': 'Assemble and care for their instrument',
+    'q3.li3': 'Play scales and fundamental exercises',
+    'q3.li4': 'Perform songs alone and as part of the group',
+    'q3.callout.title': 'Most Importantly...',
+    'q3.callout.body': '...students have a whole lot of fun.',
+
+    'q4.title': 'What Will I Play?',
+    'q4.intro': 'Beginning band students choose from a family of wind and percussion instruments. Tap any instrument below to learn more.',
+
+    'q5.title': 'How Do I Choose?',
+    'q5.p1': "Choosing an instrument isn't just about picking your favorite — it's about finding the one that fits <em>you</em> best so you can play it well and have the best possible band experience.",
+    'q5.p2': 'During the instrument selection process, your band director will look at a few things:',
+    'q5.li1.t': 'Your Embouchure',
+    'q5.li1.d': 'The shape of your lips and the way air flows between them.',
+    'q5.li2.t': 'Your Tooth Alignment',
+    'q5.li2.d': 'How your top and bottom teeth line up.',
+    'q5.li3.t': 'Your Ear',
+    'q5.li3.d': 'Your ability to recognize and match tones when you hear them.',
+    'q5.li4.t': 'Your Hands & Fingers',
+    'q5.li4.d': 'How your fingers move, as well as factors like hand size and arm length.',
+    'q5.callout.title': 'The Goal',
+    'q5.callout.body': "No single factor makes or breaks anything — it's the whole picture together that helps point toward the right instrument. The goal is to set you up for success from day one.",
+
+    'q6.title': 'What Do I Need?',
+    'q6.school.t': 'School-Provided Instruments',
+    'q6.school.p1': "Students who play <strong>oboe, bassoon, French horn, euphonium, or tuba</strong> will be issued an instrument at no cost — these instruments are large and expensive, and the school maintains a supply of them. These students only need a few personal supplies, such as a mouthpiece or reeds.",
+    'q6.school.p2': "It's worth noting that these are also some of the more challenging instruments in band, so they may not be the right fit for everyone.",
+    'q6.wood.t': 'Woodwind Instruments',
+    'q6.wood.list': 'flute, clarinet, alto saxophone, oboe, bassoon',
+    'q6.wood.p': 'Woodwind players typically need:',
+    'q6.wood.li1': 'Reeds (all woodwinds except flute)',
+    'q6.wood.li2': 'A swab for cleaning the inside of the instrument',
+    'q6.wood.li3': 'Additional supplies specific to each instrument',
+    'q6.brass.t': 'Brass Instruments',
+    'q6.brass.list': 'trumpet, trombone, French horn, euphonium, tuba',
+    'q6.brass.p': 'Brass players typically need:',
+    'q6.brass.li1': 'Their instrument and mouthpiece',
+    'q6.brass.li2': 'Cleaning and maintenance supplies',
+    'q6.perc.t': 'Percussion',
+    'q6.perc.p': 'Percussion students typically need:',
+    'q6.perc.li1': 'A variety of sticks and mallets',
+    'q6.perc.li2': 'A bag to carry them in',
+    'q6.perc.li3': 'A practice pad for home practice',
+    'q6.perc.li4': 'A keyboard instrument (such as a small xylophone or bells) for home practice',
+
+    'q7.title': 'How Do I Get It?',
+    'q7.store.t': 'From a Music Store',
+    'q7.store.p1': 'We recommend renting or purchasing from a reputable music store. Two great options set up specifically for our school are:',
+    'q7.store.link': '[your link here]',
+    'q7.store.p2': 'Renting is a popular choice for beginners — it lets students try the instrument before committing to a purchase, and many rental programs include maintenance and the option to apply payments toward buying later.',
+    'q7.used.t': 'Buying Used',
+    'q7.used.p': "A used instrument from a reputable brand in good condition can actually be a better choice than buying a cheap new one. Sites like Facebook Marketplace can be a good place to look — just make sure to search for the right brands and models. Each instrument's page has brand recommendations.",
+    'q7.warn.t': '⚠ A Word of Caution',
+    'q7.warn.b': "Bargain instruments sold on Amazon or similar sites may seem appealing, but repair technicians frequently report that these instruments are difficult or impossible to service — replacement parts often don't exist, and the instruments can actually break further in the process of being repaired. Please keep that in mind when shopping.",
+    'q7.cost.t': 'That All Sounds Expensive...',
+    'q7.cost.p': 'We understand that cost is a real concern for many families. We are committed to making sure every student who wants to play has a chance to do so, and we will do everything we can to help find a solution for each student. That said, our school-owned instruments are very limited in number, so we ask that any family who is able to obtain their own instrument please do so, allowing our limited resources to go to those who truly need them.',
+
+    'q8.title': 'Contact Us',
+    'q8.intro': "Have questions? We're happy to help.",
+    'q8.students': '<strong>Students</strong> — the best way to reach us is through a Schoology message.',
+    'q8.parents': '<strong>Parents</strong> — feel free to email us directly at the addresses below.',
+    'q8.head': 'Head Band Director',
+    'q8.director': 'Band Director',
+
+    'inst.flute.name':     'Flute',
+    'inst.oboe.name':      'Oboe',
+    'inst.bassoon.name':   'Bassoon',
+    'inst.clarinet.name':  'Clarinet',
+    'inst.sax.name':       'Alto Saxophone',
+    'inst.trumpet.name':   'Trumpet',
+    'inst.frenchhorn.name':'French Horn',
+    'inst.trombone.name':  'Trombone',
+    'inst.euphonium.name': 'Euphonium',
+    'inst.tuba.name':      'Tuba',
+    'inst.percussion.name':'Percussion',
+
+    'inst.flute.desc':     "The flute is the highest-pitched woodwind in band, with a bright, clear sound. It's held sideways and played by blowing across a small hole, similar to blowing across the top of a bottle. Flute players use no reed — just air, lips, and fingers.",
+    'inst.oboe.desc':      "The oboe has a beautiful, expressive voice that often plays the most memorable melodies in band music. It uses a special double reed, which gives it a unique tone you'll recognize right away. The oboe is challenging but incredibly rewarding to play.",
+    'inst.bassoon.desc':   "The bassoon is the deep voice of the woodwind family — tall, wooden, and full of character. Like the oboe, it uses a double reed, but produces a much lower, warmer sound. Bassoonists are rare and always in demand.",
+    'inst.clarinet.desc':  "The clarinet is one of the most versatile instruments in band. It has a wide range, from low and woody to bright and singing, and plays an important role in nearly every type of band music. Clarinets use a single reed attached to the mouthpiece.",
+    'inst.sax.desc':       "The alto saxophone is famous for its smooth, expressive sound. Although made of brass, it's actually a woodwind because it uses a single reed like the clarinet. The sax is a star in jazz, concert band, and marching band alike.",
+    'inst.trumpet.desc':   "The trumpet is the loudest and most exciting voice in the brass section, capable of bold fanfares and soaring melodies. It has three valves and is played by buzzing the lips into a small cup-shaped mouthpiece. Trumpet players often carry the main melody in band.",
+    'inst.frenchhorn.desc':"The French horn has one of the most beautiful sounds in all of music — warm, rich, and noble. Its coiled tubing makes it instantly recognizable, and players use both hands to play it. The horn is challenging but unmatched in its expressive range.",
+    'inst.trombone.desc':  "The trombone is the only brass instrument that uses a slide instead of valves to change notes. This gives it a distinctive sound and the ability to glide smoothly between pitches. Trombones add power and depth to any band.",
+    'inst.euphonium.desc': "The euphonium is sometimes called the cello of the band — it has a sweet, rich, singing tone in the low-to-middle range. It looks like a small tuba and uses valves to change notes. Euphonium players often get gorgeous, lyrical melodies to play.",
+    'inst.tuba.desc':      "The tuba is the largest and lowest-pitched instrument in band, providing the foundation of sound that everything else builds on. Despite its size, the tuba is surprisingly agile and expressive. Without a tuba, a band's sound feels incomplete.",
+    'inst.percussion.desc':"Percussion is much more than just drums. In beginning band, percussion students take a total percussion approach — developing skills across the full family of percussion instruments, including snare drum, keyboard instruments like xylophone and marimba, and accessory instruments like maracas, triangle, and cymbals. Percussionists are some of the most well-rounded musicians in the band.",
+
+    'family.woodwind':   'Woodwind',
+    'family.brass':      'Brass',
+    'family.percussion': 'Percussion'
+  },
+  es: {
+    'back': 'Volver al menú',
+    'watch': 'Mira a alguien tocarlo',
+    'close': 'Cerrar',
+    'hero.title': 'Encuentra tu sonido.',
+    'hero.subtitle': 'Todo lo que necesitas saber sobre unirte a la banda principiante de Dean Middle School. Toca una pregunta para comenzar.',
+
+    'menu.q1': '¿Qué es banda?',
+    'menu.q2': '¿Cuándo se reúne banda?',
+    'menu.q3': '¿Qué haré en clase?',
+    'menu.q4': '¿Qué tocaré?',
+    'menu.q5': '¿Cómo elijo?',
+    'menu.q6': '¿Qué necesito?',
+    'menu.q7': '¿Cómo lo consigo?',
+    'menu.q8': 'Contáctanos',
+
+    'q1.title': '¿Qué es banda?',
+    'q1.p1': 'En la clase de banda, los estudiantes aprenden a tocar <strong>instrumentos de viento</strong> (instrumentos en los que soplas) y <strong>percusión</strong> (instrumentos que golpeas). A diferencia de la orquesta, la banda no incluye instrumentos de cuerda como el violín, y a diferencia de una clase de música general, tampoco hay pianos ni guitarras. La banda es algo único.',
+    'q1.p2': 'La música de banda tiene una rica historia que abarca muchos estilos y culturas, incluyendo banda de marcha, jazz, big band, mariachi, banda, y más.',
+
+    'q2.title': '¿Cuándo se reúne banda?',
+    'q2.p1': 'Banda es una <strong>clase regular</strong>, al igual que matemáticas, lectura, lenguaje, ciencias y educación física. Se reúne todos los días durante el horario escolar regular — no después de la escuela, no es un club.',
+    'q2.p2': 'Unirse a la banda no significa renunciar a nada; encaja perfectamente en un horario normal junto con todo lo demás.',
+    'q2.callout.title': 'Tiempo después de la escuela',
+    'q2.callout.body': 'En la banda principiante, los compromisos después de la escuela son mínimos — generalmente solo un ensayo antes del gran concierto de primavera.',
+
+    'q3.title': '¿Qué haré en clase?',
+    'q3.p1': 'En la clase de banda, los estudiantes aprenden a:',
+    'q3.li1': 'Leer música',
+    'q3.li2': 'Armar y cuidar su instrumento',
+    'q3.li3': 'Tocar escalas y ejercicios fundamentales',
+    'q3.li4': 'Tocar canciones solos y como parte del grupo',
+    'q3.callout.title': 'Y lo más importante...',
+    'q3.callout.body': '...los estudiantes se divierten mucho.',
+
+    'q4.title': '¿Qué tocaré?',
+    'q4.intro': 'Los estudiantes de banda principiante eligen entre una familia de instrumentos de viento y percusión. Toca cualquier instrumento abajo para aprender más.',
+
+    'q5.title': '¿Cómo elijo?',
+    'q5.p1': 'Elegir un instrumento no se trata solo de escoger tu favorito — se trata de encontrar el que mejor se adapte a <em>ti</em> para que puedas tocarlo bien y tengas la mejor experiencia posible en banda.',
+    'q5.p2': 'Durante el proceso de selección de instrumento, tu director de banda observará algunas cosas:',
+    'q5.li1.t': 'Tu embocadura',
+    'q5.li1.d': 'La forma de tus labios y cómo fluye el aire entre ellos.',
+    'q5.li2.t': 'La alineación de tus dientes',
+    'q5.li2.d': 'Cómo se alinean tus dientes superiores e inferiores.',
+    'q5.li3.t': 'Tu oído',
+    'q5.li3.d': 'Tu habilidad para reconocer e imitar tonos cuando los escuchas.',
+    'q5.li4.t': 'Tus manos y dedos',
+    'q5.li4.d': 'Cómo se mueven tus dedos, así como factores como el tamaño de las manos y la longitud de los brazos.',
+    'q5.callout.title': 'La meta',
+    'q5.callout.body': 'Ningún factor por sí solo decide nada — es el conjunto lo que ayuda a señalar el instrumento correcto. La meta es prepararte para el éxito desde el primer día.',
+
+    'q6.title': '¿Qué necesito?',
+    'q6.school.t': 'Instrumentos proporcionados por la escuela',
+    'q6.school.p1': 'Los estudiantes que tocan <strong>oboe, fagot, corno francés, eufonio o tuba</strong> recibirán un instrumento sin costo — estos instrumentos son grandes y costosos, y la escuela mantiene un inventario de ellos. Estos estudiantes solo necesitan algunos accesorios personales, como una boquilla o cañas.',
+    'q6.school.p2': 'Vale la pena mencionar que estos también son algunos de los instrumentos más desafiantes de la banda, por lo que pueden no ser adecuados para todos.',
+    'q6.wood.t': 'Instrumentos de madera',
+    'q6.wood.list': 'flauta, clarinete, saxofón alto, oboe, fagot',
+    'q6.wood.p': 'Los músicos de viento madera generalmente necesitan:',
+    'q6.wood.li1': 'Cañas (todos los de madera excepto la flauta)',
+    'q6.wood.li2': 'Una varilla limpiadora para el interior del instrumento',
+    'q6.wood.li3': 'Accesorios adicionales específicos para cada instrumento',
+    'q6.brass.t': 'Instrumentos de metal',
+    'q6.brass.list': 'trompeta, trombón, corno francés, eufonio, tuba',
+    'q6.brass.p': 'Los músicos de metal generalmente necesitan:',
+    'q6.brass.li1': 'Su instrumento y boquilla',
+    'q6.brass.li2': 'Suministros de limpieza y mantenimiento',
+    'q6.perc.t': 'Percusión',
+    'q6.perc.p': 'Los estudiantes de percusión generalmente necesitan:',
+    'q6.perc.li1': 'Una variedad de baquetas y mazos',
+    'q6.perc.li2': 'Una bolsa para llevarlos',
+    'q6.perc.li3': 'Un pad de práctica para practicar en casa',
+    'q6.perc.li4': 'Un instrumento de teclado (como un pequeño xilófono o campanas) para practicar en casa',
+
+    'q7.title': '¿Cómo lo consigo?',
+    'q7.store.t': 'En una tienda de música',
+    'q7.store.p1': 'Recomendamos rentar o comprar en una tienda de música de buena reputación. Dos excelentes opciones configuradas específicamente para nuestra escuela son:',
+    'q7.store.link': '[enlace aquí]',
+    'q7.store.p2': 'Rentar es una opción popular para los principiantes — permite que los estudiantes prueben el instrumento antes de comprarlo, y muchos programas de renta incluyen mantenimiento y la opción de aplicar los pagos a la compra más adelante.',
+    'q7.used.t': 'Comprar usado',
+    'q7.used.p': 'Un instrumento usado de una marca reconocida y en buenas condiciones puede ser una mejor opción que comprar uno nuevo barato. Sitios como Facebook Marketplace pueden ser un buen lugar para buscar — solo asegúrate de buscar las marcas y modelos correctos. Cada página de instrumento incluye recomendaciones de marca.',
+    'q7.warn.t': '⚠ Una advertencia',
+    'q7.warn.b': 'Los instrumentos baratos vendidos en Amazon o sitios similares pueden parecer atractivos, pero los técnicos de reparación reportan con frecuencia que estos instrumentos son difíciles o imposibles de reparar — las piezas de repuesto a menudo no existen, y los instrumentos pueden romperse aún más durante la reparación. Por favor ten esto en cuenta al comprar.',
+    'q7.cost.t': 'Todo eso suena caro...',
+    'q7.cost.p': 'Entendemos que el costo es una preocupación real para muchas familias. Estamos comprometidos a asegurar que cada estudiante que quiera tocar tenga la oportunidad de hacerlo, y haremos todo lo posible para ayudar a encontrar una solución para cada estudiante. Dicho esto, nuestros instrumentos de la escuela son muy limitados, así que pedimos que cualquier familia que pueda obtener su propio instrumento lo haga, permitiendo que nuestros recursos limitados vayan a quienes realmente los necesitan.',
+
+    'q8.title': 'Contáctanos',
+    'q8.intro': '¿Tienes preguntas? Estamos felices de ayudar.',
+    'q8.students': '<strong>Estudiantes</strong> — la mejor forma de contactarnos es por mensaje de Schoology.',
+    'q8.parents': '<strong>Padres</strong> — pueden enviarnos un correo directamente a las direcciones de abajo.',
+    'q8.head': 'Director Principal de Banda',
+    'q8.director': 'Director de Banda',
+
+    'inst.flute.name':     'Flauta',
+    'inst.oboe.name':      'Oboe',
+    'inst.bassoon.name':   'Fagot',
+    'inst.clarinet.name':  'Clarinete',
+    'inst.sax.name':       'Saxofón Alto',
+    'inst.trumpet.name':   'Trompeta',
+    'inst.frenchhorn.name':'Corno Francés',
+    'inst.trombone.name':  'Trombón',
+    'inst.euphonium.name': 'Eufonio',
+    'inst.tuba.name':      'Tuba',
+    'inst.percussion.name':'Percusión',
+
+    'inst.flute.desc':     'La flauta es el instrumento de viento madera más agudo de la banda, con un sonido brillante y claro. Se sostiene de lado y se toca soplando a través de un pequeño agujero, parecido a soplar sobre la boca de una botella. Los flautistas no usan caña — solo aire, labios y dedos.',
+    'inst.oboe.desc':      'El oboe tiene una voz hermosa y expresiva que a menudo toca las melodías más memorables de la música de banda. Usa una caña doble especial, que le da un tono único que reconocerás de inmediato. El oboe es desafiante pero increíblemente gratificante.',
+    'inst.bassoon.desc':   'El fagot es la voz profunda de la familia de viento madera — alto, de madera y lleno de carácter. Como el oboe, usa una caña doble, pero produce un sonido mucho más grave y cálido. Los fagotistas son raros y siempre están en demanda.',
+    'inst.clarinet.desc':  'El clarinete es uno de los instrumentos más versátiles de la banda. Tiene un amplio rango, desde grave y profundo hasta brillante y cantante, y juega un papel importante en casi todo tipo de música de banda. Los clarinetes usan una sola caña sujeta a la boquilla.',
+    'inst.sax.desc':       'El saxofón alto es famoso por su sonido suave y expresivo. Aunque está hecho de latón, en realidad es un instrumento de viento madera porque usa una sola caña como el clarinete. El saxofón es una estrella en el jazz, la banda de concierto y la banda de marcha.',
+    'inst.trumpet.desc':   'La trompeta es la voz más fuerte y emocionante de la sección de metales, capaz de fanfarrias audaces y melodías que se elevan. Tiene tres pistones y se toca zumbando los labios en una pequeña boquilla en forma de copa. Los trompetistas a menudo llevan la melodía principal de la banda.',
+    'inst.frenchhorn.desc':'El corno francés tiene uno de los sonidos más hermosos de toda la música — cálido, rico y noble. Su tubería enrollada lo hace reconocible al instante, y los músicos usan ambas manos para tocarlo. El corno es desafiante pero incomparable en su rango expresivo.',
+    'inst.trombone.desc':  'El trombón es el único instrumento de metal que usa una vara deslizante en lugar de pistones para cambiar las notas. Esto le da un sonido distintivo y la capacidad de deslizarse suavemente entre tonos. Los trombones añaden poder y profundidad a cualquier banda.',
+    'inst.euphonium.desc': 'El eufonio a veces se le llama el violonchelo de la banda — tiene un tono dulce, rico y cantante en el rango medio-grave. Se parece a una tuba pequeña y usa pistones para cambiar las notas. Los eufonistas a menudo tienen melodías hermosas y líricas para tocar.',
+    'inst.tuba.desc':      'La tuba es el instrumento más grande y grave de la banda, proporcionando la base de sonido sobre la que se construye todo lo demás. A pesar de su tamaño, la tuba es sorprendentemente ágil y expresiva. Sin tuba, el sonido de una banda se siente incompleto.',
+    'inst.percussion.desc':'La percusión es mucho más que solo tambores. En la banda principiante, los estudiantes de percusión adoptan un enfoque de percusión total — desarrollando habilidades en toda la familia de instrumentos de percusión, incluyendo tambor militar, instrumentos de teclado como el xilófono y la marimba, e instrumentos accesorios como maracas, triángulo y platillos. Los percusionistas son algunos de los músicos más completos de la banda.',
+
+    'family.woodwind':   'Madera',
+    'family.brass':      'Metal',
+    'family.percussion': 'Percusión'
+  }
+};
+
+let currentLang = 'en';
+
+function t(key) {
+  return I18N[currentLang][key] || I18N.en[key] || key;
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+  applyI18n();
+  renderMenu();
+  renderInstruments();
+}
+
+function applyI18n() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    const value = t(key);
+    el.innerHTML = value;
+  });
+}
+
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const target = id === 'home' ? document.getElementById('view-home') : document.getElementById('view-' + id) || document.getElementById(id);
+  if (target) target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+function renderMenu() {
+  const grid = document.getElementById('menu-grid');
+  grid.innerHTML = '';
+  MENU_ITEMS.forEach((item, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'menu-card';
+    btn.onclick = () => showView(item.view.replace('view-', ''));
+    btn.innerHTML = `
+      <span class="menu-card-num">${String(idx + 1).padStart(2, '0')}</span>
+      <span class="menu-card-text">${t(item.key)}</span>
+    `;
+    grid.appendChild(btn);
+  });
+}
+
+function thumbPhotoFrame(src, alt) {
+  const safe = src.replace(/'/g, '%27');
+  return `<div class="thumb-blur" style="background-image:url('${safe}')" aria-hidden="true"></div>
+    <img class="thumb-photo" src="${src}" alt="${alt}">`;
+}
+
+function thumbSplitFrame(images, alt) {
+  return `<div class="thumb-split">${images.map((src, i) => {
+    const safe = src.replace(/'/g, '%27');
+    const paneAlt = images.length > 1 ? `${alt} (${i + 1})` : alt;
+    return `<div class="thumb-split-pane">
+      <div class="thumb-blur" style="background-image:url('${safe}')" aria-hidden="true"></div>
+      <img class="thumb-photo" src="${src}" alt="${paneAlt}">
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function instrumentThumbHtml(inst) {
+  const alt = t('inst.' + inst.id + '.name');
+  if (inst.images && inst.images.length) return thumbSplitFrame(inst.images, alt);
+  return thumbPhotoFrame(inst.img, alt);
+}
+
+function renderInstruments() {
+  const grid = document.getElementById('instrument-grid');
+  grid.innerHTML = '';
+  INSTRUMENTS.forEach(inst => {
+    const card = document.createElement('button');
+    card.className = 'instrument-card';
+    card.onclick = () => openModal(inst);
+    const thumbContent = instrumentThumbHtml(inst);
+    card.innerHTML = `
+      <div class="instrument-thumb">${thumbContent}</div>
+      <div class="instrument-card-body">
+        <div class="instrument-name">${t('inst.' + inst.id + '.name')}</div>
+        <div class="instrument-family">${t('family.' + inst.family)}</div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function openModal(inst) {
+  document.getElementById('modal-name').textContent = t('inst.' + inst.id + '.name');
+  document.getElementById('modal-family').textContent = t('family.' + inst.family);
+  document.getElementById('modal-desc').textContent = t('inst.' + inst.id + '.desc');
+
+  const watchBtn = document.getElementById('modal-watch');
+  if (inst.youtube && inst.youtube !== '' && inst.youtube !== '#') {
+    watchBtn.href = inst.youtube;
+    watchBtn.style.display = 'inline-block';
+  } else {
+    watchBtn.style.display = 'none';
+  }
+
+  document.getElementById('modal-thumb').innerHTML = instrumentThumbHtml(inst);
+  document.getElementById('modal-backdrop').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal-backdrop').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function closeModalIfBackdrop(event) {
+  if (event.target.id === 'modal-backdrop') closeModal();
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
+});
+
+// Initialize
+applyI18n();
+renderMenu();
+renderInstruments();
+</script>
+
+</body>
+</html>

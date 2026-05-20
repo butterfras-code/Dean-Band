@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spring Concert Program</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React & ReactDOM (UMD) -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        /* Mobile-first optimizations */
+        * {
+            -webkit-tap-highlight-color: rgba(249, 115, 22, 0.35);
+        }
+
+        html {
+            touch-action: manipulation;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #fff4df;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #f97316;
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #fb923c;
+        }
+    </style>
+</head>
+
+<body class="bg-[#fff4df] text-[#061735]">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        // --- ICONS (Inline SVGs to avoid module loading issues) ---
+        const IconBase = ({ children, size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                {children}
+            </svg>
+        );
+
+        const ChevronLeft = (props) => <IconBase {...props}><polyline points="15 18 9 12 15 6" /></IconBase>;
+        const Calendar = (props) => <IconBase {...props}><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></IconBase>;
+        const MapPin = (props) => <IconBase {...props}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></IconBase>;
+        const Music = (props) => <IconBase {...props}><path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" /></IconBase>;
+        const Info = (props) => <IconBase {...props}><circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" /></IconBase>;
+        const Heart = (props) => <IconBase {...props}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" /></IconBase>;
+        const Globe = (props) => <IconBase {...props}><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></IconBase>;
+
+        // --- CONFIGURATION & DATA ---
+
+        const INSTRUMENT_SCORE_ORDER = [
+            "Flute", "Oboe", "Bassoon", "Clarinet", "Bass Clarinet",
+            "Alto Saxophone", "Tenor Saxophone", "Baritone Saxophone",
+            "Trumpet", "Horn", "Trombone", "Euphonium", "Tuba", "Percussion"
+        ];
+
+        const ROSTER_DATA = [
+            // Group 1: Symphonic Winds
+            { group: "Symphonic Winds", first: "Jayden", last: "Arteaga", instrument: "Alto Saxophone" },
+            { group: "Symphonic Winds", first: "Omar", last: "Balcazar", instrument: "Trombone" },
+            { group: "Symphonic Winds", first: "Koltyn", last: "Burleson", instrument: "Trumpet" },
+            { group: "Symphonic Winds", first: "Xavier", last: "Estrada", instrument: "Alto Saxophone" },
+            { group: "Symphonic Winds", first: "Jonel", last: "Garcia Jholiva", instrument: "Trumpet" },
+            { group: "Symphonic Winds", first: "William", last: "Gomez Mejia", instrument: "Euphonium" },
+            { group: "Symphonic Winds", first: "An", last: "Le", instrument: "Flute" },
+            { group: "Symphonic Winds", first: "Mateo", last: "Lizama", instrument: "Trumpet" },
+            { group: "Symphonic Winds", first: "Alexis", last: "Martinez", instrument: "Trumpet" },
+            { group: "Symphonic Winds", first: "Amy", last: "Moran", instrument: "Flute" },
+            { group: "Symphonic Winds", first: "Alex", last: "Moreno", instrument: "Flute" },
+            { group: "Symphonic Winds", first: "Ariana", last: "Moreno", instrument: "Clarinet" },
+            { group: "Symphonic Winds", first: "Gabriel", last: "Nunez", instrument: "Trombone" },
+            { group: "Symphonic Winds", first: "Samuel", last: "Picaz", instrument: "Percussion" },
+            { group: "Symphonic Winds", first: "Justin", last: "Pimentel", instrument: "Clarinet" },
+            { group: "Symphonic Winds", first: "Roberto", last: "Salazar", instrument: "Trombone" },
+            { group: "Symphonic Winds", first: "Gerson", last: "Salazar", instrument: "Horn" },
+            { group: "Symphonic Winds", first: "Broderick", last: "Williams", instrument: "Tuba" },
+            { group: "Symphonic Winds", first: "Rolando", last: "Zavala Martinez", instrument: "Percussion" },
+            { group: "Symphonic Winds", first: "Katie", last: "Williams", instrument: "Oboe" },
+            { group: "Symphonic Winds", first: "Emilio", last: "Aguilar", instrument: "Trumpet" },
+            { group: "Symphonic Winds", first: "Jacob", last: "Ayala", instrument: "Bass Clarinet" },
+            { group: "Symphonic Winds", first: "Bralon", last: "Clay", instrument: "Percussion" },
+            { group: "Symphonic Winds", first: "David", last: "Cuevas", instrument: "Trombone" },
+            { group: "Symphonic Winds", first: "Andre'", last: "Davis", instrument: "Percussion" },
+            { group: "Symphonic Winds", first: "Kameron", last: "Davis", instrument: "Tuba" },
+            { group: "Symphonic Winds", first: "Andre", last: "Dino", instrument: "Horn" },
+            { group: "Symphonic Winds", first: "Ian", last: "Flores", instrument: "Percussion" },
+            { group: "Symphonic Winds", first: "Kain", last: "Gee", instrument: "Horn" },
+            { group: "Symphonic Winds", first: "Fernando", last: "Gomez Salvador", instrument: "Trombone" },
+            { group: "Symphonic Winds", first: "Ian", last: "Gonzalez", instrument: "Clarinet" },
+            { group: "Symphonic Winds", first: "Isaias", last: "Gracia", instrument: "Clarinet" },
+            { group: "Symphonic Winds", first: "Mohamad", last: "Ismail", instrument: "Trumpet" },
+            { group: "Symphonic Winds", first: "Jessica", last: "Lopez", instrument: "Flute" },
+            { group: "Symphonic Winds", first: "Jose", last: "Ramirez", instrument: "Trombone" },
+            { group: "Symphonic Winds", first: "Dhamar", last: "Ruiz", instrument: "Oboe" },
+            { group: "Symphonic Winds", first: "Abraham", last: "Salgado", instrument: "Clarinet" },
+            { group: "Symphonic Winds", first: "Maliyah", last: "Strait", instrument: "Baritone Saxophone" },
+            { group: "Symphonic Winds", first: "Kimberly", last: "Torres", instrument: "Horn" },
+            { group: "Symphonic Winds", first: "Stephany", last: "Trejo", instrument: "Flute" },
+            { group: "Symphonic Winds", first: "Kenzie", last: "Trinidad", instrument: "Trumpet" },
+            { group: "Symphonic Winds", first: "Jayden", last: "Eubanks", instrument: "Euphonium" },
+            { group: "Symphonic Winds", first: "Stephanie", last: "Lopez", instrument: "Alto Saxophone" },
+            { group: "Symphonic Winds", first: "Joseph", last: "Menjivar", instrument: "Percussion" },
+            { group: "Symphonic Winds", first: "Genesis", last: "Torres Avalos", instrument: "Flute" },
+
+            // Group 2: Symphonic Band
+            { group: "Symphonic Band", first: "Andrew", last: "Adame", instrument: "Bassoon" },
+            { group: "Symphonic Band", first: "Roxanne", last: "Argueta Gutierrez", instrument: "Oboe" },
+            { group: "Symphonic Band", first: "Jacob", last: "Arroyo", instrument: "Flute" },
+            { group: "Symphonic Band", first: "Carlos", last: "Barrios", instrument: "Trumpet" },
+            { group: "Symphonic Band", first: "Israel", last: "Arroyo", instrument: "Percussion" },
+            { group: "Symphonic Band", first: "Caleb", last: "Castillo", instrument: "Percussion" },
+            { group: "Symphonic Band", first: "Ayden", last: "Cordova", instrument: "Horn" },
+            { group: "Symphonic Band", first: "Steven", last: "Cruz", instrument: "Trombone" },
+            { group: "Symphonic Band", first: "Santiago", last: "Facundo", instrument: "Trumpet" },
+            { group: "Symphonic Band", first: "Israel", last: "Flores", instrument: "Trumpet" },
+            { group: "Symphonic Band", first: "Neymar", last: "Galindo", instrument: "Trumpet" },
+            { group: "Symphonic Band", first: "Carlos", last: "Gil", instrument: "Euphonium" },
+            { group: "Symphonic Band", first: "Cristel", last: "Gorgua-Perez", instrument: "Flute" },
+            { group: "Symphonic Band", first: "Ricardo", last: "Henriquez", instrument: "Oboe" },
+            { group: "Symphonic Band", first: "Daneiry", last: "Hernandez Barahona", instrument: "Clarinet" },
+            { group: "Symphonic Band", first: "Yudith", last: "Irias", instrument: "Clarinet" },
+            { group: "Symphonic Band", first: "Franklin", last: "Lopez", instrument: "Percussion" },
+            { group: "Symphonic Band", first: "Isaiah", last: "Lopez", instrument: "Flute" },
+            { group: "Symphonic Band", first: "Kevin", last: "Maldonado", instrument: "Trombone" },
+            { group: "Symphonic Band", first: "Alexander", last: "Melecio Arriola", instrument: "Clarinet" },
+            { group: "Symphonic Band", first: "Angel", last: "Mendez", instrument: "Euphonium" },
+            { group: "Symphonic Band", first: "Jabneel", last: "Ortiz Orellana", instrument: "Alto Saxophone" },
+            { group: "Symphonic Band", first: "Nicholas", last: "Reynoso", instrument: "Percussion" },
+            { group: "Symphonic Band", first: "Kendra", last: "Rodriguez", instrument: "Bassoon" },
+            { group: "Symphonic Band", first: "Andrew", last: "Romero", instrument: "Clarinet" },
+            { group: "Symphonic Band", first: "Mason", last: "Saravia", instrument: "Alto Saxophone" },
+            { group: "Symphonic Band", first: "Jacob", last: "Smith", instrument: "Flute" },
+            { group: "Symphonic Band", first: "Ismael", last: "Vargas Sanchez", instrument: "Trombone" },
+            { group: "Symphonic Band", first: "Cristian", last: "Vazquez", instrument: "Trumpet" },
+            { group: "Symphonic Band", first: "Jesusangel", last: "Vega", instrument: "Percussion" },
+            { group: "Symphonic Band", first: "Jeneiry", last: "Sura", instrument: "Flute" },
+            { group: "Symphonic Band", first: "Marilyn", last: "Argueta-Moreira", instrument: "Percussion" },
+            { group: "Symphonic Band", first: "Uriel", last: "Correa Zavala", instrument: "Alto Saxophone" },
+            { group: "Symphonic Band", first: "Abel", last: "Cruz", instrument: "Tuba" },
+            { group: "Symphonic Band", first: "Alejandra", last: "Gonzalez", instrument: "Flute" },
+            { group: "Symphonic Band", first: "Kaleb", last: "Nolan", instrument: "Tuba" },
+            { group: "Symphonic Band", first: "Mario", last: "Reyes Villagran", instrument: "Oboe" },
+            { group: "Symphonic Band", first: "Angelica", last: "Rey Simental", instrument: "Trombone" },
+            { group: "Symphonic Band", first: "Nam", last: "Van", instrument: "Trumpet" },
+            { group: "Symphonic Band", first: "Mateo", last: "Gamarro", instrument: "Clarinet" },
+            { group: "Symphonic Band", first: "Zuriel", last: "Garduno", instrument: "Trumpet" },
+            { group: "Symphonic Band", first: "Ta'Nia", last: "Jones", instrument: "Clarinet" },
+            { group: "Symphonic Band", first: "Dasha", last: "Lopez Pineda", instrument: "Clarinet" },
+            { group: "Symphonic Band", first: "Maricela", last: "Reynoso Martinez", instrument: "Flute" },
+
+            // Group 3 merged into Symphonic Band
+            { group: "Symphonic Band", first: "Grayson", last: "Carter", instrument: "Trombone" },
+            { group: "Symphonic Band", first: "Gabriell", last: "Diaz", instrument: "Tuba" },
+            { group: "Symphonic Band", first: "Anjel", last: "Reyes", instrument: "Trombone" },
+            { group: "Symphonic Band", first: "Issabella", last: "Salinas", instrument: "Clarinet" },
+            { group: "Symphonic Band", first: "Rommel", last: "Sosa Montes", instrument: "Clarinet" },
+            { group: "Symphonic Band", first: "Hudson", last: "Davis", instrument: "Tuba" },
+            { group: "Symphonic Band", first: "Perla", last: "Abrego Escobar", instrument: "Clarinet" },
+            { group: "Symphonic Band", first: "Steven", last: "Sanchez", instrument: "Clarinet" }
+        ];
+
+        const TRANSLATIONS = {
+            en: {
+                title: "2026 Spring Concert",
+                school: "Dean Middle School",
+                date: "May 18, 2026 • 7:00 PM",
+                location: "Dean Middle School",
+                shortTitle: "Dean MS Band",
+                perfGroups: "Performing Groups",
+                symphonicBand: "Symphonic Band",
+                symphonicWinds: "Symphonic Winds",
+                specialThanks: "Special Thanks",
+                nextEvents: "Next Year/End of Year",
+                program: "Program",
+                musicians: "Musicians",
+                conductor: "Conductor",
+                back: "Back to Menu",
+                thanksHeader: "Special Thanks",
+                thanksIntro: "We would like to thank the following individuals for their unwavering support:",
+                thanksStaff: [
+                    "Michael George, Principal",
+                    "Kristen Thorin, Director of Instruction",
+                    "Laura Mosqueda, Secretary",
+                    "John Morrison, Director of Fine Arts",
+                    "Joe Glass, Coordinator of Secondary Music",
+                    "Dr. Ashley Augustave, Paul Guerrero, Will Watkins, Assistant Principals",
+                    "Lakeysa Hobson, T'Keyah Gilliam, Steven Hatcher, Counselors"
+                ],
+                thanksClosing: "And a very special thanks to the Dean Band students for their work throughout the year, the Dean Band parents for supporting the students, and the Jersey Village Band Staff for their weekly support.",
+                fundraiserHeader: "Fundraiser Recognition",
+                fundraiserIntro: "In our recent fundraiser, 68 students and 188 donations raised over $8,000 to make band better for everyone. We would like to specifically acknowledge the families of the following students who raised over $250:",
+                topDonors: [
+                    "Omar Balcazar",
+                    "Xavier Bedigan",
+                    "Vincent De Leon",
+                    "Kain Gee",
+                    "Lauryn & Morgan Graham",
+                    "Roxanne A Gutierrez",
+                    "Ricardo Henriquez",
+                    "Mateo Lizama",
+                    "Guillermo Morales",
+                    "Tommy Nguyen",
+                    "Samuel Picaz"
+                ],
+                endOfYearHeader: "Next Year/End of Year",
+                endOfYearIntro: "Please review these important instrument and band reminders before summer break.",
+                endOfYearItems: [
+                    { title: "Instrument Return", body: "School-owned instruments should be returned for check-in and summer repair. Students continuing in band should keep their rented or purchased instruments over the summer so they can keep practicing and maintain the value of payments already made. Students not continuing in band should make arrangements with the music store to return or pick up the instrument and conclude rental agreements." },
+                    { title: "Summer Instrument Checkout", body: "Students using a school-owned instrument may check one out for the summer if they are planning to return to Dean in the fall and continue in band." },
+                    { title: "Next Year Band Info", body: "We will hit the ground running in August, so students should make sure to practice some over the summer. Students who earn a spot in Symphonic Winds should be especially careful to stay prepared and ready. Next year's band placements will be posted during the last week of school." }
+                ],
+                conductorSymphonicWinds: "Mr. Paul Hogue",
+                conductorSymphonicBand: "Mr. Justin Butterfras",
+                selectionsSymphonicWinds: [
+                    "Best Day of My Life",
+                    "Red Giant",
+                    "Superheroes R' Us"
+                ],
+                selectionsSymphonicBand: [
+                    "Troll King",
+                    "Voodoo Dance",
+                    "Paint It Black"
+                ],
+                instrumentLabels: {
+                    "Flute": "Flute",
+                    "Oboe": "Oboe",
+                    "Bassoon": "Bassoon",
+                    "Clarinet": "Clarinet",
+                    "Bass Clarinet": "Bass Clarinet",
+                    "Alto Saxophone": "Alto Saxophone",
+                    "Tenor Saxophone": "Tenor Saxophone",
+                    "Baritone Saxophone": "Baritone Saxophone",
+                    "Trumpet": "Trumpet",
+                    "Horn": "Horn",
+                    "Trombone": "Trombone",
+                    "Euphonium": "Euphonium",
+                    "Tuba": "Tuba",
+                    "Percussion": "Percussion"
+                },
+                footerText: "© 2026 Dean Middle School Band"
+            },
+            es: {
+                title: "Concierto de Primavera 2026",
+                school: "Escuela Secundaria Dean",
+                date: "18 de mayo de 2026 • 7:00 PM",
+                location: "Escuela Secundaria Dean",
+                shortTitle: "Banda de Dean MS",
+                perfGroups: "Grupos Musicales",
+                symphonicBand: "Banda Sinfónica",
+                symphonicWinds: "Vientos Sinfónicos",
+                specialThanks: "Agradecimientos",
+                nextEvents: "Próximo Año/Fin de Año",
+                program: "Programa",
+                musicians: "Músicos",
+                conductor: "Director",
+                back: "Volver al Menú",
+                thanksHeader: "Agradecimientos Especiales",
+                thanksIntro: "Nos gustaría agradecer a las siguientes personas por su apoyo inquebrantable:",
+                thanksStaff: [
+                    "Michael George, Director",
+                    "Kristen Thorin, Directora de Instrucción",
+                    "Laura Mosqueda, Secretaria",
+                    "John Morrison, Director de Bellas Artes",
+                    "Joe Glass, Coordinador de Música Secundaria",
+                    "Dr. Ashley Augustave, Paul Guerrero, Will Watkins, Subdirectores",
+                    "Lakeysa Hobson, T'Keyah Gilliam, Steven Hatcher, Consejeros"
+                ],
+                thanksClosing: "Y un agradecimiento muy especial a los estudiantes de Dean Band por su trabajo durante todo el año, a los padres de Dean Band por apoyar a los estudiantes, y al personal de Jersey Village Band por su apoyo semanal.",
+                fundraiserHeader: "Reconocimiento de Recaudación de Fondos",
+                fundraiserIntro: "En nuestra reciente recaudación de fondos, 68 estudiantes y 188 donaciones recaudaron más de $8,000 para mejorar la banda para todos. Nos gustaría reconocer específicamente a las familias de los siguientes estudiantes que recaudaron más de $250:",
+                topDonors: [
+                    "Omar Balcazar",
+                    "Xavier Bedigan",
+                    "Vincent De Leon",
+                    "Kain Gee",
+                    "Lauryn & Morgan Graham",
+                    "Roxanne A Gutierrez",
+                    "Ricardo Henriquez",
+                    "Mateo Lizama",
+                    "Guillermo Morales",
+                    "Tommy Nguyen",
+                    "Samuel Picaz"
+                ],
+                endOfYearHeader: "Próximo Año/Fin de Año",
+                endOfYearIntro: "Por favor revise estos recordatorios importantes sobre instrumentos y banda antes de las vacaciones de verano.",
+                endOfYearItems: [
+                    { title: "Devolución de instrumentos", body: "Los instrumentos propiedad de la escuela deben devolverse para revisión y reparaciones de verano. Los estudiantes que continuarán en banda deben conservar sus instrumentos rentados o comprados durante el verano para seguir practicando y no perder el valor de los pagos que ya se han hecho. Los estudiantes que no continuarán en banda deben hacer arreglos con la tienda de música para devolver o recoger el instrumento y cerrar los acuerdos de renta." },
+                    { title: "Préstamo de instrumentos para el verano", body: "Los estudiantes que usan un instrumento propiedad de la escuela pueden pedir uno prestado para el verano si planean regresar a Dean en el otoño y continuar en banda." },
+                    { title: "Información de banda para el próximo año", body: "En agosto comenzaremos con mucho ritmo, así que los estudiantes deben practicar un poco durante el verano. Los estudiantes que ganen un lugar en Vientos Sinfónicos deben tener especial cuidado de mantenerse preparados y listos. Las colocaciones de banda para el próximo año se publicarán durante la última semana de clases." }
+                ],
+                conductorSymphonicWinds: "Sr. Paul Hogue",
+                conductorSymphonicBand: "Sr. Justin Butterfras",
+                selectionsSymphonicWinds: [
+                    "Best Day of My Life",
+                    "Red Giant",
+                    "Superheroes R' Us"
+                ],
+                selectionsSymphonicBand: [
+                    "Troll King",
+                    "Voodoo Dance",
+                    "Paint It Black"
+                ],
+                instrumentLabels: {
+                    "Flute": "Flauta",
+                    "Oboe": "Oboe",
+                    "Bassoon": "Fagot",
+                    "Clarinet": "Clarinete",
+                    "Bass Clarinet": "Clarinete bajo",
+                    "Alto Saxophone": "Saxofón alto",
+                    "Tenor Saxophone": "Saxofón tenor",
+                    "Baritone Saxophone": "Saxofón barítono",
+                    "Trumpet": "Trompeta",
+                    "Horn": "Corno francés",
+                    "Trombone": "Trombón",
+                    "Euphonium": "Eufonio",
+                    "Tuba": "Tuba",
+                    "Percussion": "Percusión"
+                },
+                footerText: "© 2026 Banda de la Escuela Secundaria Dean"
+            }
+        };
+
+        // --- HELPER FUNCTIONS ---
+        const sortRoster = (students) => {
+            return students.sort((a, b) => {
+                const instrA = INSTRUMENT_SCORE_ORDER.indexOf(a.instrument);
+                const instrB = INSTRUMENT_SCORE_ORDER.indexOf(b.instrument);
+                const safeInstrA = instrA === -1 ? 999 : instrA;
+                const safeInstrB = instrB === -1 ? 999 : instrB;
+                if (safeInstrA !== safeInstrB) return safeInstrA - safeInstrB;
+                return a.last.localeCompare(b.last);
+            });
+        };
+
+        // --- COMPONENTS ---
+        const Background = () => (
+            <div className="fixed inset-0 z-0 bg-[#fff4df] overflow-hidden pointer-events-none">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(249,115,22,0.28),transparent_30%),radial-gradient(circle_at_85%_15%,rgba(6,23,53,0.18),transparent_28%),linear-gradient(135deg,#fff8ea_0%,#fff0d4_55%,#ffe6bd_100%)]"></div>
+                <div className="absolute -top-24 -right-16 w-80 h-80 bg-orange-500/25 rounded-full blur-3xl"></div>
+                <div className="absolute top-1/3 -left-24 w-72 h-72 bg-[#061735]/15 rounded-full blur-3xl"></div>
+                <div className="absolute bottom-0 right-1/4 w-96 h-40 bg-orange-400/20 rotate-[-12deg] blur-2xl"></div>
+                {[...Array(26)].map((_, i) => (
+                    <div key={i} className="absolute rounded-full opacity-40 animate-pulse"
+                        style={{
+                            background: i % 2 === 0 ? '#f97316' : '#061735',
+                            top: `${Math.random() * 100}%`,
+                            left: `${Math.random() * 100}%`,
+                            width: `${Math.random() * 5 + 2}px`,
+                            height: `${Math.random() * 5 + 2}px`,
+                            animationDuration: `${Math.random() * 3 + 2}s`
+                        }} />
+                ))}
+                {[...Array(7)].map((_, i) => (
+                    <div key={`slash-${i}`} className="absolute h-1 w-24 bg-orange-400/20 rotate-[-18deg] rounded-full"
+                        style={{
+                            top: `${Math.random() * 100}%`,
+                            left: `${Math.random() * 100}%`,
+                        }} />
+                ))}
+            </div>
+        );
+
+        // Mobile-first Card component with larger touch targets
+        const Card = ({ children, onClick, className = "" }) => (
+            <div onClick={onClick} className={`bg-[#092451]/90 backdrop-blur-md border-2 border-orange-400/40 p-6 md:p-8 rounded-2xl shadow-xl shadow-blue-950/40 mb-6 text-center transform transition-all active:scale-95 ${onClick ? 'cursor-pointer hover:bg-[#0c316d]/95 hover:border-orange-300 hover:shadow-orange-500/25' : ''} ${className}`} style={{ minHeight: onClick ? '80px' : 'auto' }}>
+                {children}
+            </div>
+        );
+
+        const SectionHeader = ({ title }) => (
+            <div className="flex items-center justify-center space-x-4 my-8">
+                <div className="h-px bg-gradient-to-r from-transparent via-orange-400 to-transparent w-20"></div>
+                <h2 className="text-2xl md:text-xl font-black text-[#061735] tracking-[0.18em] uppercase">{title}</h2>
+                <div className="h-px bg-gradient-to-r from-transparent via-orange-400 to-transparent w-20"></div>
+            </div>
+        );
+
+        function SpringConcertProgram() {
+            const [lang, setLang] = useState('en');
+            const [view, setView] = useState('home');
+            const t = TRANSLATIONS[lang];
+
+            const getGroupData = (groupName) => {
+                const groupMembers = ROSTER_DATA.filter(s => s.group === groupName);
+                return sortRoster(groupMembers);
+            };
+
+            const handleLangToggle = () => setLang(prev => prev === 'en' ? 'es' : 'en');
+
+            const renderHome = () => (
+                <div className="animate-in fade-in zoom-in duration-500">
+                    <div className="text-center mb-10 space-y-3">
+                        <div className="w-20 h-20 md:w-16 md:h-16 bg-orange-500 rounded-3xl rotate-[-6deg] mx-auto mb-6 flex items-center justify-center shadow-[0_0_35px_rgba(249,115,22,0.55)]">
+                            <Music className="text-blue-950 w-10 h-10 md:w-8 md:h-8 rotate-[6deg]" />
+                        </div>
+                        <h1 className="text-5xl md:text-4xl font-black text-[#061735] tracking-tight leading-tight px-4 drop-shadow-[0_4px_18px_rgba(249,115,22,0.25)]">{t.title}</h1>
+                        <p className="text-[#0a2a66] font-semibold text-xl md:text-lg tracking-wide">{t.school}</p>
+                        <div className="flex flex-col items-center justify-center space-y-3 mt-6 text-orange-600 text-base md:text-sm font-bold">
+                            <div className="flex items-center space-x-3">
+                                <Calendar size={20} />
+                                <span className="text-lg md:text-base">{t.date}</span>
+                            </div>
+                            <div className="flex items-center space-x-3">
+                                <MapPin size={20} />
+                                <span className="text-lg md:text-base">{t.location}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <SectionHeader title={t.perfGroups} />
+
+                    <div className="space-y-5 max-w-lg mx-auto">
+                        <Card onClick={() => setView('symphonicBand')}>
+                            <h3 className="text-2xl md:text-xl font-bold text-white mb-2">{t.symphonicBand}</h3>
+                            <p className="text-blue-100 text-base md:text-sm">{t.school}</p>
+                        </Card>
+                        <Card onClick={() => setView('symphonicWinds')}>
+                            <h3 className="text-2xl md:text-xl font-bold text-white mb-2">{t.symphonicWinds}</h3>
+                            <p className="text-blue-100 text-base md:text-sm">{t.school}</p>
+                        </Card>
+                    </div>
+
+                    <div className="mt-12 grid grid-cols-2 gap-5 max-w-lg mx-auto">
+                        <Card onClick={() => setView('thanks')} className="h-full flex flex-col items-center justify-center py-8">
+                            <Heart className="w-8 h-8 md:w-6 md:h-6 text-orange-300 mb-3" />
+                            <span className="text-white font-semibold text-lg md:text-base">{t.specialThanks}</span>
+                        </Card>
+                        <Card onClick={() => setView('events')} className="h-full flex flex-col items-center justify-center py-8">
+                            <Info className="w-8 h-8 md:w-6 md:h-6 text-orange-300 mb-3" />
+                            <span className="text-white font-semibold text-lg md:text-base">{t.nextEvents}</span>
+                        </Card>
+                    </div>
+                </div>
+            );
+
+            const renderGroupPage = (groupName, titleKey) => {
+                const sortedStudents = getGroupData(groupName);
+                const byInstrument = sortedStudents.reduce((acc, student) => {
+                    const inst = student.instrument || "Unknown";
+                    if (!acc[inst]) acc[inst] = [];
+                    acc[inst].push(student);
+                    return acc;
+                }, {});
+
+                // Get the correct conductor and selections based on the band
+                let conductorName = "";
+                let selections = [];
+
+                if (titleKey === 'symphonicWinds') {
+                    conductorName = t.conductorSymphonicWinds;
+                    selections = t.selectionsSymphonicWinds;
+                } else if (titleKey === 'symphonicBand') {
+                    conductorName = t.conductorSymphonicBand;
+                    selections = t.selectionsSymphonicBand;
+                }
+
+                return (
+                    <div className="animate-in slide-in-from-right duration-300">
+                        <h2 className="text-4xl md:text-3xl font-black text-[#061735] mb-3 text-center">{t[titleKey]}</h2>
+                        <p className="text-center text-[#0a2a66] mb-10 text-lg md:text-base">{t.conductor}: <span className="text-[#061735] italic font-semibold">{conductorName}</span></p>
+                        <div className="bg-[#092451]/75 rounded-2xl p-6 md:p-8 mb-10 border-2 border-orange-400/40 shadow-lg shadow-blue-950/30">
+                            <h3 className="text-orange-300 font-black uppercase tracking-[0.2em] text-lg md:text-sm mb-6 text-center border-b-2 border-orange-400/30 pb-3">{t.program}</h3>
+                            <ul className="space-y-5 md:space-y-4">
+                                {selections.map((song, idx) => (
+                                    <li key={idx} className="text-center">
+                                        <span className="text-white font-semibold text-xl md:text-lg">{song}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                        <SectionHeader title={t.musicians} />
+                        <div className="grid grid-cols-1 gap-8 md:gap-6 pb-24">
+                            {INSTRUMENT_SCORE_ORDER.map(inst => {
+                                if (!byInstrument[inst]) return null;
+                                return (
+                                    <div key={inst} className="mb-4 bg-[#092451]/55 rounded-xl p-6 md:p-5 border border-orange-400/25">
+                                        <h4 className="text-orange-300 font-bold mb-4 text-xl md:text-lg text-center md:text-left">{t.instrumentLabels[inst] || inst}</h4>
+                                        <ul className="space-y-2.5 md:space-y-1.5">
+                                            {byInstrument[inst].map((s, i) => (
+                                                <li key={i} className="text-blue-50 text-lg md:text-base text-center md:text-left leading-relaxed">{s.first} {s.last}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                );
+            };
+
+            const renderInfoPage = (type) => (
+                <div className="animate-in slide-in-from-right duration-300 h-full">
+                    <div className="bg-[#092451]/90 p-8 md:p-10 rounded-2xl border-2 border-orange-400/40 shadow-xl shadow-blue-950/40">
+                        {type === 'thanks' ? (
+                            <>
+                                <Heart className="w-16 h-16 md:w-12 md:h-12 text-orange-300 mx-auto mb-6" />
+                                <h2 className="text-3xl md:text-2xl font-black text-white mb-6 text-center">{t.thanksHeader}</h2>
+
+                                <div className="text-left max-w-2xl mx-auto">
+                                    <p className="text-blue-50 leading-relaxed mb-6 text-lg md:text-base">{t.thanksIntro}</p>
+
+                                    <ul className="space-y-2 text-blue-100 text-base md:text-sm mb-6">
+                                        {t.thanksStaff.map((staff, idx) => (
+                                            <li key={idx} className="leading-relaxed">{staff}</li>
+                                        ))}
+                                    </ul>
+
+                                    <p className="text-blue-50 leading-relaxed mb-8 text-lg md:text-base">{t.thanksClosing}</p>
+
+                                    <div className="border-t-2 border-orange-400/30 pt-8 mt-8">
+                                        <h3 className="text-orange-300 font-bold text-xl md:text-lg mb-4 text-center">{t.fundraiserHeader}</h3>
+                                        <p className="text-blue-50 leading-relaxed mb-6 text-base md:text-sm">{t.fundraiserIntro}</p>
+
+                                        <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-blue-100 text-base md:text-sm">
+                                            {t.topDonors.map((donor, idx) => (
+                                                <li key={idx} className="leading-relaxed">• {donor}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <Calendar className="w-16 h-16 md:w-12 md:h-12 text-orange-300 mx-auto mb-6" />
+                                <h2 className="text-3xl md:text-2xl font-black text-white mb-4 text-center">{t.endOfYearHeader}</h2>
+                                <p className="text-blue-100 leading-relaxed mb-8 text-center max-w-2xl mx-auto text-base md:text-sm">{t.endOfYearIntro}</p>
+                                <div className="space-y-5 text-left max-w-2xl mx-auto w-full">
+                                    {t.endOfYearItems.map((item, idx) => (
+                                        <div key={idx} className="bg-blue-950/35 border border-orange-400/30 rounded-xl p-5">
+                                            <h3 className="text-orange-300 font-black uppercase tracking-wider text-base md:text-sm mb-2">{item.title}</h3>
+                                            <p className="text-blue-50 text-lg md:text-base leading-relaxed">{item.body}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </>
+                        )}
+                    </div>
+                </div>
+            );
+
+            return (
+                <div className="relative min-h-screen font-sans selection:bg-orange-400 selection:text-blue-950">
+                    <Background />
+                    <div className="sticky top-0 z-50 bg-[#fff4df]/95 backdrop-blur-md border-b-2 border-orange-400/50 px-5 py-4 md:py-3 shadow-lg shadow-orange-900/10">
+                        <div className="grid grid-cols-3 items-center gap-4">
+                            {/* Left: Back Button (when not on home) */}
+                            <div className="flex justify-start">
+                                {view !== 'home' ? (
+                                    <button onClick={() => setView('home')} className="flex items-center text-[#061735] hover:text-orange-600 transition-colors font-semibold text-base md:text-sm py-2" style={{ minHeight: '48px' }}>
+                                        <ChevronLeft size={24} className="mr-1" />
+                                        <span className="hidden sm:inline">{t.back}</span>
+                                    </button>
+                                ) : (
+                                    <div style={{ minHeight: '48px' }}></div>
+                                )}
+                            </div>
+
+                            {/* Center: Title */}
+                            <div className="flex justify-center">
+                                <span className="text-[#061735] text-sm md:text-xs font-bold tracking-widest uppercase text-center">{t.shortTitle}</span>
+                            </div>
+
+                            {/* Right: Language Toggle */}
+                            <div className="flex justify-end">
+                                <button onClick={handleLangToggle} className="flex items-center space-x-2 bg-[#061735] hover:bg-[#0c316d] active:bg-blue-800 text-orange-300 px-4 py-2.5 md:py-2 rounded-full text-base md:text-sm font-semibold transition-colors border-2 border-orange-400/70 shadow-md shadow-blue-950/20" style={{ minHeight: '48px' }}>
+                                    <Globe size={18} />
+                                    <span>{lang === 'en' ? 'Español' : 'English'}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <main className="relative z-10 container mx-auto px-5 md:px-4 py-10 md:py-8 max-w-3xl">
+                        {view === 'home' && renderHome()}
+                        {view === 'symphonicBand' && renderGroupPage('Symphonic Band', 'symphonicBand')}
+                        {view === 'symphonicWinds' && renderGroupPage('Symphonic Winds', 'symphonicWinds')}
+                        {view === 'thanks' && renderInfoPage('thanks')}
+                        {view === 'events' && renderInfoPage('events')}
+                    </main>
+                    <footer className="relative z-10 text-center py-8 text-[#061735]/65 text-base md:text-xs">
+                        <p>{t.footerText}</p>
+                    </footer>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<SpringConcertProgram />);
+    </script>
+</body>
+
+</html>
